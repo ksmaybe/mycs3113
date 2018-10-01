@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
 		program1.SetProjectionMatrix(projectionMatrix);
 		program1.SetViewMatrix(viewMatrix);
 
+		//untextured
 		glUseProgram(program1.programID);
 
 		glm::mat4 modelMatrix1 = glm::mat4(1.0f);
@@ -118,7 +119,7 @@ int main(int argc, char *argv[])
 		glDisableVertexAttribArray(program1.positionAttribute);
 		glDisableVertexAttribArray(program1.texCoordAttribute);
 
-		//first
+		//first textured animated
 		glUseProgram(program.programID);
 
 		glBindTexture(GL_TEXTURE_2D, emojiTexture);
@@ -143,7 +144,7 @@ int main(int argc, char *argv[])
 		glBindTexture(GL_TEXTURE_2D, hahaTexture);
 
 		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix1, glm::vec3(-1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::translate(modelMatrix1, glm::vec3(-1.0f, -0.5f, 0.0f));
 		program.SetModelMatrix(modelMatrix);
 		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 		glEnableVertexAttribArray(program.positionAttribute);
@@ -165,7 +166,7 @@ int main(int argc, char *argv[])
 		glBindTexture(GL_TEXTURE_2D, pikaTexture);
 
 		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix1, glm::vec3(1.0f, 0.0f, 0.0f));
+		modelMatrix = glm::translate(modelMatrix1, glm::vec3(1.0f,0.5f, 0.0f));
 		program.SetModelMatrix(modelMatrix);
 		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 		glEnableVertexAttribArray(program.positionAttribute);
