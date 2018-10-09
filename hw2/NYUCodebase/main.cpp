@@ -91,10 +91,10 @@ public:
 	float width=0.05f;
 	float height=0.05f;
 
-	float velocity=5.0f;
+	float velocity=8.0f;
 	float direction_x;
 	float direction_y;
-	void move();
+	void move(float elapsed);
 };
 void Ball::Draw(ShaderProgram &p)
 {
@@ -122,13 +122,57 @@ void Ball::reset()
 {
 	x = 0.0f;
 	y = 0.0f;
-	direction_x;
-	direction_y;
+	int rightt = (rand() % 100) % 2;
+	int upp = (rand() % 100) % 2;
+	double angle = (rand() % 100)*45/100*3.14159265/180;
+	if (rightt % 2 == 1) { direction_x = cos(angle); }
+	else { direction_x = -1 * cos(angle); }
+	if (upp % 2 == 1) {direction_y = sin(angle); }
+	else { direction_y = -1 * sin(angle); }
+}
+void Ball::move(float elapsed)
+{
+	x += elapsed *direction_x*velocity;
+	y += elapsed *direction_y*velocity;
 }
 
 void Setup()
 {
 	
+}
+void detect_collision(Ball &b,Paddle p)
+{
+	float dx = abs(b.x - p.x) - ((b.width + p.width) / 2);
+	float dy= abs(b.y - p.y) - ((b.height + p.height) / 2);
+	if(dy<=0 & dx <=0)
+	{
+		b.direction_x = -1 * b.direction_x;
+	}
+}
+void bounce_wall(Ball &b)
+{
+	if (b.y >= 1.0f)
+	{
+		b.direction_y = -1 * b.direction_y;
+	}
+	if (b.y <= -1.0f)
+	{
+		b.direction_y = -1 * b.direction_y;
+	}
+}
+void check_win(Ball &b,int &score_p1,int &score_p2)
+{
+	if (b.x >= 1.777f)
+	{
+		score_p1 += 1;
+		b.reset();
+	}
+	if (b.x <= -1.777f)
+	{
+		score_p2 += 1;
+		b.reset();
+	}
+
 }
 int main(int argc, char *argv[])
 {
@@ -174,10 +218,11 @@ int main(int argc, char *argv[])
 	left.x = -1.7f;
 	right.x = 1.7f;
 	Ball ball;
-	int score_p1, score_p2;
-
+	ball.reset();
+	int score_p1=0, score_p2=0;
     bool done = false;
     while (!done) {
+
 		//time
 		float ticks = (float)SDL_GetTicks() / 10000.0f;
 		float elapsed = ticks - lastFrameTicks;
@@ -201,14 +246,12 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_W)
 				{
 					left.y += elapsed * speed;
-					//left paddle up
-					
+					//left paddle up			
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_S)
 				{
 					left.y -= elapsed * speed;
 					//left paddle down
-					modelMatrix_leftpaddle = glm::translate(modelMatrix_leftpaddle, glm::vec3(distance, 0.0f, 1.0f));
 				}
             }
         }
@@ -223,8 +266,11 @@ int main(int argc, char *argv[])
 		left.Draw(program1);
 		right.Draw(program1);
 		ball.Draw(program1);
-
-		
+		ball.move(elapsed);
+		detect_collision(ball, right);
+		detect_collision(ball, left);
+		bounce_wall(ball);
+		check_win(ball, score_p1, score_p2);
 
 
 
