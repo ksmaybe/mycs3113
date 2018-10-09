@@ -36,13 +36,104 @@ GLuint LoadTexture(const char *filepath)
 	stbi_image_free(image);
 	return retTexture;
 }
+class Paddle
+{
+public:
+	void Draw(ShaderProgram &p);
+	float x=0.0f;
+	float y=0.0f;
+	float rotation;
+
+	int textureID;
+
+	float width=0.05f;
+	float height=0.5f;
+
+	float velocity;
+	float direction_x;
+	float direction_y;
+};
+void Paddle::Draw(ShaderProgram &p)
+{
+	glUseProgram(p.programID);
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	float vertices1[] = { x + width / 2,y - height / 2,
+		x + width / 2,y + height / 2,
+		x - width / 2,y + height / 2 };
+	float vertices2[] = { 
+	x - width / 2,y + height / 2,
+	x - width / 2,y - height / 2, 
+	x + width / 2,y - height / 2 };
+	p.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	p.SetModelMatrix(modelMatrix);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
+	glEnableVertexAttribArray(p.positionAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, 4);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
+	glDrawArrays(GL_TRIANGLES, 0, 4);
+	glDisableVertexAttribArray(p.positionAttribute);
+	glDisableVertexAttribArray(p.texCoordAttribute);
+}
 
 
+class Ball
+{
+public:
+	void Draw(ShaderProgram &p);
+	void reset();
+	float x=0.0f;
+	float y=0.0f;
+	float rotation;
 
+	int textureID;
+
+	float width=0.05f;
+	float height=0.05f;
+
+	float velocity=5.0f;
+	float direction_x;
+	float direction_y;
+	void move();
+};
+void Ball::Draw(ShaderProgram &p)
+{
+	glUseProgram(p.programID);
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	float vertices1[] = { x + width / 2,y - height / 2,
+		x + width / 2,y + height / 2,
+		x - width / 2,y + height / 2 };
+	float vertices2[] = {
+	x - width / 2,y + height / 2,
+	x - width / 2,y - height / 2,
+	x + width / 2,y - height / 2 };
+	p.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	p.SetModelMatrix(modelMatrix);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
+	glEnableVertexAttribArray(p.positionAttribute);
+
+	glDrawArrays(GL_TRIANGLES, 0, 4);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
+	glDrawArrays(GL_TRIANGLES, 0, 4);
+	glDisableVertexAttribArray(p.positionAttribute);
+	glDisableVertexAttribArray(p.texCoordAttribute);
+}
+void Ball::reset()
+{
+	x = 0.0f;
+	y = 0.0f;
+	direction_x;
+	direction_y;
+}
+
+void Setup()
+{
+	
+}
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Look the huge smiley moves", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Look at this awesome PONG game that doesn't work", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
@@ -50,7 +141,7 @@ int main(int argc, char *argv[])
     glewInit();
 
 #endif
-	glViewport(0, 0, 858, 360);
+	glViewport(0, 0, 858, 480);
 
 	ShaderProgram program;
 	ShaderProgram program1;
@@ -60,11 +151,15 @@ int main(int argc, char *argv[])
 	GLuint hahaTexture = LoadTexture(RESOURCE_FOLDER"mario.png");
 	GLuint pikaTexture = LoadTexture(RESOURCE_FOLDER"pikachu-transparent-3.png");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
-	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 
 
 	projectionMatrix = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
+	program.SetProjectionMatrix(projectionMatrix);
+	program.SetViewMatrix(viewMatrix);
+	program1.SetProjectionMatrix(projectionMatrix);
+	program1.SetViewMatrix(viewMatrix);
 	glUseProgram(program.programID);
 
     SDL_Event event;
@@ -74,43 +169,93 @@ int main(int argc, char *argv[])
 	float lastFrameTicks = 0.0f;
 	float distance = 0.0f;
 
-
-
+	float speed = 30.0f;
+	Paddle left,right;
+	left.x = -1.7f;
+	right.x = 1.7f;
+	Ball ball;
+	int score_p1, score_p2;
 
     bool done = false;
     while (!done) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-                done = true;
-            }
-        }
-		glClearColor(0.4f, 0.2f, 0.4f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-
+		//time
 		float ticks = (float)SDL_GetTicks() / 10000.0f;
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
 
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+                done = true;
+            } else if(event.type == SDL_KEYDOWN)
+            {
+	            if(event.key.keysym.scancode==SDL_SCANCODE_UP)
+				{
+					right.y += elapsed * speed;
+	            	//right paddle up
+	            }
+				if(event.key.keysym.scancode==SDL_SCANCODE_DOWN)
+				{
+					right.y -= elapsed * speed;
+					//right paddle down
+				}
+				if (event.key.keysym.scancode == SDL_SCANCODE_W)
+				{
+					left.y += elapsed * speed;
+					//left paddle up
+					
+				}
+				if (event.key.keysym.scancode == SDL_SCANCODE_S)
+				{
+					left.y -= elapsed * speed;
+					//left paddle down
+					modelMatrix_leftpaddle = glm::translate(modelMatrix_leftpaddle, glm::vec3(distance, 0.0f, 1.0f));
+				}
+            }
+        }
 
-		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(distance, 0.0f, 1.0f));
 
-		program.SetModelMatrix(modelMatrix);
-		program.SetProjectionMatrix(projectionMatrix);
-		program.SetViewMatrix(viewMatrix);
-		program1.SetProjectionMatrix(projectionMatrix);
-		program1.SetViewMatrix(viewMatrix);
+
+
+
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+		left.Draw(program1);
+		right.Draw(program1);
+		ball.Draw(program1);
+
+		
+
+
+
+
+		//left paddle
+
+		/*modelMatrix_leftpaddle = glm::mat4(1.0f);
+		
+
+		program.SetModelMatrix(modelMatrix_leftpaddle);
+
+
+
+		//right paddle
+
+
+
+
+
+
 
 		//untextured
 		glUseProgram(program1.programID);
 
 		glm::mat4 modelMatrix1 = glm::mat4(1.0f);
-		modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(0.0f, 0.0f, 0.0f));
-		program1.SetColor(0.4f, 0.9f, 0.4f, 1.0f);
+		modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(distance, 0.0f, 0.0f));
+		program1.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 		program1.SetModelMatrix(modelMatrix1);
 
-		float vertices1[] = { 0.5f, -0.5f, 0.0f, 0.5f, -0.5f, -0.5f };
+		
+		float vertices1[] = { 0.5f, -1.5f, 0.0f, 0.5f, -0.5f, -0.5f };
 		glVertexAttribPointer(program1.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
 		glEnableVertexAttribArray(program1.positionAttribute);
 
@@ -134,7 +279,7 @@ int main(int argc, char *argv[])
 
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		modelMatrix = glm::mat4(1.0f);
+		modelMatrix_leftpaddle = glm::mat4(1.0f);
 		distance += elapsed;
 		glDisableVertexAttribArray(program.positionAttribute);
 		glDisableVertexAttribArray(program.texCoordAttribute);
@@ -143,9 +288,9 @@ int main(int argc, char *argv[])
 		//second 
 		glBindTexture(GL_TEXTURE_2D, hahaTexture);
 
-		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix1, glm::vec3(-1.0f, -0.5f, 0.0f));
-		program.SetModelMatrix(modelMatrix);
+		modelMatrix_leftpaddle = glm::mat4(1.0f);
+		modelMatrix_leftpaddle = glm::translate(modelMatrix1, glm::vec3(-1.0f, -0.5f, 0.0f));
+		program.SetModelMatrix(modelMatrix_leftpaddle);
 		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 		glEnableVertexAttribArray(program.positionAttribute);
 
@@ -165,9 +310,9 @@ int main(int argc, char *argv[])
 		//third
 		glBindTexture(GL_TEXTURE_2D, pikaTexture);
 
-		modelMatrix = glm::mat4(1.0f);
-		modelMatrix = glm::translate(modelMatrix1, glm::vec3(1.0f,0.5f, 0.0f));
-		program.SetModelMatrix(modelMatrix);
+		modelMatrix_leftpaddle = glm::mat4(1.0f);
+		modelMatrix_leftpaddle = glm::translate(modelMatrix1, glm::vec3(1.0f,0.5f, 0.0f));
+		program.SetModelMatrix(modelMatrix_leftpaddle);
 		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
 		glEnableVertexAttribArray(program.positionAttribute);
 
@@ -178,7 +323,7 @@ int main(int argc, char *argv[])
 		glDrawArrays(GL_TRIANGLES, 0, 7);
 
 		glDisableVertexAttribArray(program.positionAttribute);
-		glDisableVertexAttribArray(program.texCoordAttribute);
+		glDisableVertexAttribArray(program.texCoordAttribute);*/
 
 		SDL_GL_SwapWindow(displayWindow);
 
