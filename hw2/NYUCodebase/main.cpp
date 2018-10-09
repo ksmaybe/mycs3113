@@ -187,31 +187,24 @@ int main(int argc, char *argv[])
 #endif
 	glViewport(0, 0, 858, 480);
 
-	ShaderProgram program;
 	ShaderProgram program1;
-	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	program1.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
-	GLuint emojiTexture = LoadTexture(RESOURCE_FOLDER"smile.gif");
-	GLuint hahaTexture = LoadTexture(RESOURCE_FOLDER"mario.png");
-	GLuint pikaTexture = LoadTexture(RESOURCE_FOLDER"pikachu-transparent-3.png");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 
 
 	projectionMatrix = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
-	program.SetProjectionMatrix(projectionMatrix);
-	program.SetViewMatrix(viewMatrix);
+
 	program1.SetProjectionMatrix(projectionMatrix);
 	program1.SetViewMatrix(viewMatrix);
-	glUseProgram(program.programID);
+	glUseProgram(program1.programID);
 
     SDL_Event event;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	float lastFrameTicks = 0.0f;
-	float distance = 0.0f;
 
 	float speed = 30.0f;
 	Paddle left,right;
@@ -228,6 +221,7 @@ int main(int argc, char *argv[])
 		float elapsed = ticks - lastFrameTicks;
 		lastFrameTicks = ticks;
 
+		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
@@ -271,105 +265,6 @@ int main(int argc, char *argv[])
 		detect_collision(ball, left);
 		bounce_wall(ball);
 		check_win(ball, score_p1, score_p2);
-
-
-
-
-		//left paddle
-
-		/*modelMatrix_leftpaddle = glm::mat4(1.0f);
-		
-
-		program.SetModelMatrix(modelMatrix_leftpaddle);
-
-
-
-		//right paddle
-
-
-
-
-
-
-
-		//untextured
-		glUseProgram(program1.programID);
-
-		glm::mat4 modelMatrix1 = glm::mat4(1.0f);
-		modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(distance, 0.0f, 0.0f));
-		program1.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-		program1.SetModelMatrix(modelMatrix1);
-
-		
-		float vertices1[] = { 0.5f, -1.5f, 0.0f, 0.5f, -0.5f, -0.5f };
-		glVertexAttribPointer(program1.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
-		glEnableVertexAttribArray(program1.positionAttribute);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glDisableVertexAttribArray(program1.positionAttribute);
-		glDisableVertexAttribArray(program1.texCoordAttribute);
-
-		//first textured animated
-		glUseProgram(program.programID);
-
-		glBindTexture(GL_TEXTURE_2D, emojiTexture);
-		float vertices[] = { -0.5, -0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, -0.5, 0.5 };
-
-		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-		glEnableVertexAttribArray(program.positionAttribute);
-
-		float texCoords[] = { 0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0 };
-		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-		glEnableVertexAttribArray(program.texCoordAttribute);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		modelMatrix_leftpaddle = glm::mat4(1.0f);
-		distance += elapsed;
-		glDisableVertexAttribArray(program.positionAttribute);
-		glDisableVertexAttribArray(program.texCoordAttribute);
-
-
-		//second 
-		glBindTexture(GL_TEXTURE_2D, hahaTexture);
-
-		modelMatrix_leftpaddle = glm::mat4(1.0f);
-		modelMatrix_leftpaddle = glm::translate(modelMatrix1, glm::vec3(-1.0f, -0.5f, 0.0f));
-		program.SetModelMatrix(modelMatrix_leftpaddle);
-		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-		glEnableVertexAttribArray(program.positionAttribute);
-
-		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-		glEnableVertexAttribArray(program.texCoordAttribute);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, 7);
-
-		glDisableVertexAttribArray(program.positionAttribute);
-		glDisableVertexAttribArray(program.texCoordAttribute);
-
-
-		glUseProgram(program.programID);
-
-
-		//third
-		glBindTexture(GL_TEXTURE_2D, pikaTexture);
-
-		modelMatrix_leftpaddle = glm::mat4(1.0f);
-		modelMatrix_leftpaddle = glm::translate(modelMatrix1, glm::vec3(1.0f,0.5f, 0.0f));
-		program.SetModelMatrix(modelMatrix_leftpaddle);
-		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-		glEnableVertexAttribArray(program.positionAttribute);
-
-		glVertexAttribPointer(program.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
-		glEnableVertexAttribArray(program.texCoordAttribute);
-
-
-		glDrawArrays(GL_TRIANGLES, 0, 7);
-
-		glDisableVertexAttribArray(program.positionAttribute);
-		glDisableVertexAttribArray(program.texCoordAttribute);*/
 
 		SDL_GL_SwapWindow(displayWindow);
 
