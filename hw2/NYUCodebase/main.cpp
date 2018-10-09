@@ -206,7 +206,7 @@ int main(int argc, char *argv[])
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	float lastFrameTicks = 0.0f;
 
-	float speed = 30.0f;
+	float speed = 100.0f;
 	Paddle left,right;
 	left.x = -1.7f;
 	right.x = 1.7f;
