@@ -25,33 +25,26 @@ int main(int argc, char *argv[])
 #endif
 	glViewport(0, 0, 858, 480);
 
-	ShaderProgram program1;
-	program1.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
+	ShaderProgram program;
+	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 
 
+
 	projectionMatrix = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
 
-	program1.SetProjectionMatrix(projectionMatrix);
-	program1.SetViewMatrix(viewMatrix);
-	glUseProgram(program1.programID);
+	program.SetProjectionMatrix(projectionMatrix);
+	program.SetViewMatrix(viewMatrix);
+	glUseProgram(program.programID);
 
     SDL_Event event;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	float lastFrameTicks = 0.0f;
 
-	float speed = 100.0f;
-	Player left,right;
-	left.x = -1.7f;
-	right.x = 1.7f;
-	Ball ball;
-	ball.reset();
-	int score_p1=0, score_p2=0;
-    bool done = false;
+	setup();
     while (!done) {
 
 		//time
@@ -95,10 +88,7 @@ int main(int argc, char *argv[])
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-		left.Draw(program1);
-		right.Draw(program1);
-		ball.Draw(program1);
-		ball.move(elapsed);
+		render();
 		detect_collision(ball, right);
 		detect_collision(ball, left);
 		bounce_wall(ball);

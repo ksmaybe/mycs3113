@@ -63,7 +63,17 @@ public:
 	float width;
 	float height;
 };
+class Game
+{
+public:
+	Player left;
+	Player right;
+	Ball ball;
+	float lastFrameTicks;
+	float speed;
 
+
+};
 void detect_collision(Ball &b, Player p);
 void bounce_wall(Ball &b);
 void check_win(Ball &b, int &score_p1, int &score_p2);
