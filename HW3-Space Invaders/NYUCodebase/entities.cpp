@@ -65,7 +65,7 @@ void detect_collision(Ball &b, Player p)
 {
 	float dx = abs(b.x - p.x) - ((b.width + p.width) / 2);
 	float dy = abs(b.y - p.y) - ((b.height + p.height) / 2);
-	if (dy <= 0 & dx <= 0)
+	if ((dy <= 0) & (dx <= 0))
 	{
 		b.direction_x = -1 * b.direction_x;
 	}

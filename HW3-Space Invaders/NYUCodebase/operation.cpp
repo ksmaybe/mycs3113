@@ -1,5 +1,5 @@
 #include "space.h"
-void setup(Game &g)
+void Setup(Game &g)
 {
 	g.lastFrameTicks = 0.0f;
 
@@ -9,14 +9,21 @@ void setup(Game &g)
 	g.right.x = 1.7f;
 	
 	g.ball.reset();
-	int score_p1 = 0, score_p2 = 0;
-	bool done = false;
+	g.score_p1=0,g.score_p2 = 0;
+	g.done = false;
 }
 
-void render()
+void Render(Game &g,ShaderProgram program, float elapsed)
 {
-	left.Draw(program);
-	right.Draw(program);
-	ball.Draw(program);
-	ball.move(elapsed);
+	g.left.Draw(program);
+	g.right.Draw(program);
+	g.ball.Draw(program);
+	g.ball.move(elapsed);
+}
+void Runner(Game &g)
+{
+	detect_collision(g.ball, g.right);
+	detect_collision(g.ball, g.left);
+	bounce_wall(g.ball);
+	check_win(g.ball, g.score_p1, g.score_p2);
 }

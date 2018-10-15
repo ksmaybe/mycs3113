@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 	glViewport(0, 0, 858, 480);
 
 	ShaderProgram program;
-	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
+	program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
@@ -43,39 +43,39 @@ int main(int argc, char *argv[])
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	setup();
-    while (!done) {
+	Game g;
+	Setup(g);
+    while (!g.done) {
 
 		//time
 		float ticks = (float)SDL_GetTicks() / 10000.0f;
-		float elapsed = ticks - lastFrameTicks;
-		lastFrameTicks = ticks;
+		float elapsed = ticks - g.lastFrameTicks;
+		g.lastFrameTicks = ticks;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
         while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-                done = true;
+                g.done = true;
             } else if(event.type == SDL_KEYDOWN)
             {
 	            if(event.key.keysym.scancode==SDL_SCANCODE_UP)
 				{
-					right.y += elapsed * speed;
+					g.right.y += elapsed * g.speed;
 	            	//right paddle up
 	            }
 				if(event.key.keysym.scancode==SDL_SCANCODE_DOWN)
 				{
-					right.y -= elapsed * speed;
+					g.right.y -= elapsed * g.speed;
 					//right paddle down
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_W)
 				{
-					left.y += elapsed * speed;
+					g.left.y += elapsed * g.speed;
 					//left paddle up			
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_S)
 				{
-					left.y -= elapsed * speed;
+					g.left.y -= elapsed * g.speed;
 					//left paddle down
 				}
             }
@@ -88,11 +88,8 @@ int main(int argc, char *argv[])
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-		render();
-		detect_collision(ball, right);
-		detect_collision(ball, left);
-		bounce_wall(ball);
-		check_win(ball, score_p1, score_p2);
+		Render(g,program,elapsed);
+		Runner(g);
 
 		SDL_GL_SwapWindow(displayWindow);
 
