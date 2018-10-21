@@ -66,20 +66,29 @@ public:
 class Game
 {
 public:
-	Player left;
-	Player right;
+	Player ship;
 	Ball ball;
 	float lastFrameTicks;
 	float speed;
 	int score_p1;
-	int score_p2;
 	bool done;
 
 
 };
+class Bullet
+{
+public:
+	void Draw(ShaderProgram &p);
+	float x;
+	float y;
+	float width;
+	float height;
+	int textureID;
+}
+;
 void detect_collision(Ball &b, Player p);
 void bounce_wall(Ball &b);
-void check_win(Ball &b, int &score_p1, int &score_p2);
+void check_win(Ball &b, int &score_p1);
 GLuint LoadTexture(const char *filepath);
 void Setup(Game &g);
 void Render(Game &g, ShaderProgram program, float elapsed);

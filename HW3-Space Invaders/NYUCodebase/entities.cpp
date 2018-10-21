@@ -81,19 +81,13 @@ void bounce_wall(Ball &b)
 		b.direction_y = -1 * b.direction_y;
 	}
 }
-void check_win(Ball &b, int &score_p1, int &score_p2)
+void check_win(Ball &b, int &score_p1)
 {
 	if (b.x >= 1.777f)
 	{
 		score_p1 += 1;
 		b.reset();
 	}
-	if (b.x <= -1.777f)
-	{
-		score_p2 += 1;
-		b.reset();
-	}
-
 }
 
 GLuint LoadTexture(const char *filepath)

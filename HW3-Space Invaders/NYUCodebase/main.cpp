@@ -58,25 +58,15 @@ int main(int argc, char *argv[])
                 g.done = true;
             } else if(event.type == SDL_KEYDOWN)
             {
-	            if(event.key.keysym.scancode==SDL_SCANCODE_UP)
+	            if(event.key.keysym.scancode==SDL_SCANCODE_LEFT)
 				{
-					g.right.y += elapsed * g.speed;
-	            	//right paddle up
+					g.ship.x-= elapsed * g.speed;
+	            	//battleship move ship
 	            }
-				if(event.key.keysym.scancode==SDL_SCANCODE_DOWN)
+				if(event.key.keysym.scancode==SDL_SCANCODE_RIGHT)
 				{
-					g.right.y -= elapsed * g.speed;
-					//right paddle down
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_W)
-				{
-					g.left.y += elapsed * g.speed;
-					//left paddle up			
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_S)
-				{
-					g.left.y -= elapsed * g.speed;
-					//left paddle down
+					g.ship.x+= elapsed * g.speed;
+					//battleship move right
 				}
             }
         }
