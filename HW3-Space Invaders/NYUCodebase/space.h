@@ -117,3 +117,4 @@ GLuint LoadTexture(const char *filepath);
 void Setup(Game &g);
 void Render(Game &g, ShaderProgram program, float elapsed);
 void Runner(Game &g);
+void Update(Game &g);

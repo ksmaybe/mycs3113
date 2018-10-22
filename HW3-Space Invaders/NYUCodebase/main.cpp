@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	glViewport(0, 0, 858, 480);
 
 	ShaderProgram program;
-	program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
+	program.Load(RESOURCE_FOLDER"vertex_texured.glsl", RESOURCE_FOLDER"fragment_texured.glsl");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
 		g.lastFrameTicks = ticks;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-        /*while (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 g.done = true;
             } else if(event.type == SDL_KEYDOWN)
@@ -76,8 +76,9 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
 
-		Render(g,program,elapsed);
-		Runner(g);*/
+		//Render(g,program,elapsed);
+		//Runner(g);
+		Update(g);
 
 		SDL_GL_SwapWindow(displayWindow);
 

@@ -131,7 +131,7 @@ SheetSprite::SheetSprite(unsigned int textureID, float u, float v, float width, 
 	this->size = size;
 
 }
-void SheetSprite::Draw(ShaderProgram& program)
+void SheetSprite::Draw(ShaderProgram& p)
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	GLfloat texCoords[] = { u,v + height
@@ -145,8 +145,12 @@ void SheetSprite::Draw(ShaderProgram& program)
 	0.5f*size*aspect,0.5f*size,
 	-0.5f*size*aspect,0.5f*size,
 	0.5f*size*aspect,0.5f*size,
-	-0.5f * size * aspect, -0.5f * size ,	0.5f * size * aspect, -0.5f * size };
-
+	-0.5f * size * aspect, -0.5f * size ,
+	0.5f * size * aspect, -0.5f * size };
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDisableVertexAttribArray(p.positionAttribute);
+	glDisableVertexAttribArray(p.texCoordAttribute);
 }
 
 void Update(Game &g)

@@ -11,7 +11,7 @@ void Setup(Game &g)
 	g.score_p1 = 0;
 	g.done = false;
 	float gg = 1024.0f;
-	GLuint spriteSheetTexture = LoadTexture("NYUCodebase.app/Contents/Resources/assets/graphics/Space shooter assets (300 assets)/Spritesheet/sheet.png");
+	GLuint spriteSheetTexture = LoadTexture(RESOURCE_FOLDER"sheet.png");
 	for(int i=0;i<30;i++)
 	{
 		Entity myEntity;
@@ -24,9 +24,13 @@ void Setup(Game &g)
 
 void Render(Game &g,ShaderProgram program, float elapsed)
 {
-	g.ship.Draw(program);
-	g.ball.Draw(program);
-	g.ball.move(elapsed);
+	//g.ship.Draw(program);
+	//g.ball.Draw(program);
+	//g.ball.move(elapsed);
+	//for (int i = 0; i < 30; i++)
+	//{
+		//g.entities[i].Draw();
+	//}
 }
 void Runner(Game &g)
 {
