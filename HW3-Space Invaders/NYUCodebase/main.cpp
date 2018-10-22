@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 		//Render(g,elapsed);
 		//Runner(g);
 		//Update(g);
-		DrawText(program, g.fontTexture, "Hello", 1.0f, 1.0f);
+		DrawText(program, g.fontTexture, "H", 0.5f, 0.1f);
 		SDL_GL_SwapWindow(displayWindow);
 
 

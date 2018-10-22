@@ -190,8 +190,9 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 	}
 	float* x1 = vertexData.data();
 	float* x2 = texCoordData.data();
-	for (int i = 0; i < text.size(); i++) {
-		glBindTexture(GL_TEXTURE_2D, fontTexture);
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+	for (int i = 0; i < vertexData.size()/2; i++) {
+		
 		glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, x1);
 		glEnableVertexAttribArray(p.positionAttribute);
 		glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, x2);
@@ -199,7 +200,7 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glDisableVertexAttribArray(p.positionAttribute);
 		glDisableVertexAttribArray(p.texCoordAttribute);
-		x1++, x2++;
+		++x1, ++x2;
 	}
 }
 
