@@ -5,10 +5,21 @@ void Setup(Game &g)
 
 	g.speed = 100.0f;
 	g.ship.x = 0.0f;
+	g.ship.y = -0.85f;
 	
 	g.ball.reset();
 	g.score_p1 = 0;
 	g.done = false;
+	float gg = 1024.0f;
+	GLuint spriteSheetTexture = LoadTexture("NYUCodebase.app/Contents/Resources/assets/graphics/Space shooter assets (300 assets)/Spritesheet/sheet.png");
+	for(int i=0;i<30;i++)
+	{
+		Entity myEntity;
+		myEntity.sprite = SheetSprite(spriteSheetTexture, 425.0f / gg, 468.0f / gg, 93.0f / gg, 84.0f / gg, 0.2);
+		g.entities.push_back(myEntity);
+	}
+
+
 }
 
 void Render(Game &g,ShaderProgram program, float elapsed)

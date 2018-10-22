@@ -109,3 +109,79 @@ GLuint LoadTexture(const char *filepath)
 	stbi_image_free(image);
 	return retTexture;
 }
+
+SheetSprite::SheetSprite()
+{
+	this->textureID = 0;
+	this->u = 0;
+	this->v = 0;
+	this->width = 0;
+	this->height = 0;
+	this->size = 0;
+}
+
+
+SheetSprite::SheetSprite(unsigned int textureID, float u, float v, float width, float height, float size)
+{
+	this->textureID = textureID;
+	this->u = u;
+	this->v = v;
+	this->width = width;
+	this->height = height;
+	this->size = size;
+
+}
+void SheetSprite::Draw(ShaderProgram& program)
+{
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	GLfloat texCoords[] = { u,v + height
+		,u + width,v,
+		u,v,
+	u + width,v,
+	u,v + height,
+	u + width,v + height };
+	float aspect = width / height;
+	float vertices[] = { -0.5f*size*aspect,-0.5f*size,
+	0.5f*size*aspect,0.5f*size,
+	-0.5f*size*aspect,0.5f*size,
+	0.5f*size*aspect,0.5f*size,
+	-0.5f * size * aspect, -0.5f * size ,	0.5f * size * aspect, -0.5f * size };
+
+}
+
+void Update(Game &g)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	for(int i=0;i<g.entities.size();i++)
+	{
+		g.entities[i].sprite.Draw(g.program);
+	}
+}
+
+void DrawText(ShaderProgram &program, int fontTexture, std::string text, float size, float spacing)
+{
+	float character_size = 1.0 / 16.0f;
+	std::vector<float>vertexData;
+	std::vector<float>texCoordData;
+	for (int i = 0; i < text.size(); i++)
+	{
+		int SpriteIndex = (int)text[i];
+		float texture_x = (float)(SpriteIndex % 16) / 16.0f;
+		float texture_y = (float)(SpriteIndex / 16) / 16.0f;
+		vertexData.insert(vertexData.end(), { ((size + spacing) * i) + (-0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+		((size + spacing) * i) + (0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (0.5f * size), -0.5f * size,
+		((size + spacing) * i) + (0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (-0.5f * size), -0.5f * size, });
+		texCoordData.insert(texCoordData.end(), { texture_x, texture_y,
+		texture_x, texture_y + character_size,
+		texture_x + character_size, texture_y,
+		texture_x + character_size, texture_y + character_size,
+		texture_x + character_size, texture_y,
+		texture_x, texture_y + character_size, });
+
+	}
+
+}
+

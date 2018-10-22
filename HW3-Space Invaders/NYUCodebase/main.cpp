@@ -2,11 +2,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iterator>
-#ifdef _WINDOWS
-#define RESOURCE_FOLDER ""
-#else
-#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
-#endif
+
 
 
 SDL_Window* displayWindow;
@@ -45,6 +41,7 @@ int main(int argc, char *argv[])
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Game g;
 	Setup(g);
+	g.program = program;
     while (!g.done) {
 
 		//time
@@ -53,7 +50,7 @@ int main(int argc, char *argv[])
 		g.lastFrameTicks = ticks;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-        while (SDL_PollEvent(&event)) {
+        /*while (SDL_PollEvent(&event)) {
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 g.done = true;
             } else if(event.type == SDL_KEYDOWN)
@@ -78,8 +75,9 @@ int main(int argc, char *argv[])
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+
 		Render(g,program,elapsed);
-		Runner(g);
+		Runner(g);*/
 
 		SDL_GL_SwapWindow(displayWindow);
 

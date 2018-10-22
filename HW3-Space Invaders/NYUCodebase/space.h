@@ -10,6 +10,12 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "stb_image.h"
 #include <iterator>
+#include <vector>
+#ifdef _WINDOWS
+#define RESOURCE_FOLDER ""
+#else
+#define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
+#endif
 
 class Player
 {
@@ -61,8 +67,24 @@ public:
 	float u;
 	float v;
 	float width;
-	float height;
+	float height = 0;
 };
+
+class Entity
+{
+public:
+	void Draw();
+	glm::vec3 position=glm::vec3(-1.0, 0.0, 0.0);
+	glm::vec3 velocity=glm::vec3(-1.0, 0.0, 0.0);
+	glm::vec3 size=glm::vec3(-1.0, 0.0, 0.0);
+
+	float rotation=0.0;
+
+	SheetSprite sprite;
+
+	float health=0.0;
+};
+
 class Game
 {
 public:
@@ -72,6 +94,8 @@ public:
 	float speed;
 	int score_p1;
 	bool done;
+	std::vector<Entity> entities;
+	ShaderProgram program;
 
 
 };
