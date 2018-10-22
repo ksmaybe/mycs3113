@@ -21,8 +21,8 @@ int main(int argc, char *argv[])
 #endif
 	glViewport(0, 0, 858, 480);
 
-	ShaderProgram program;
-	program.Load(RESOURCE_FOLDER"vertex_texured.glsl", RESOURCE_FOLDER"fragment_texured.glsl");
+	ShaderProgram program{};
+	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
@@ -75,8 +75,8 @@ int main(int argc, char *argv[])
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-
-		//Render(g,program,elapsed);
+		g.ship.Draw(program);
+		Render(g,elapsed);
 		//Runner(g);
 		Update(g);
 

@@ -28,17 +28,11 @@ void Ball::Draw(ShaderProgram &p)
 	float vertices1[] = { x + width / 2,y - height / 2,
 		x + width / 2,y + height / 2,
 		x - width / 2,y + height / 2 };
-	float vertices2[] = {
-	x - width / 2,y + height / 2,
-	x - width / 2,y - height / 2,
-	x + width / 2,y - height / 2 };
 	p.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 	p.SetModelMatrix(modelMatrix);
 	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
 	glEnableVertexAttribArray(p.positionAttribute);
 
-	glDrawArrays(GL_TRIANGLES, 0, 4);
-	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
 	glDrawArrays(GL_TRIANGLES, 0, 4);
 	glDisableVertexAttribArray(p.positionAttribute);
 	glDisableVertexAttribArray(p.texCoordAttribute);
@@ -131,11 +125,13 @@ SheetSprite::SheetSprite(unsigned int textureID, float u, float v, float width, 
 	this->size = size;
 
 }
-void SheetSprite::Draw(ShaderProgram& p)
+void SheetSprite::Draw(ShaderProgram &p)
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
-	GLfloat texCoords[] = { u,v + height
-		,u + width,v,
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	p.SetModelMatrix(modelMatrix);
+	GLfloat texCoords[] = { u,v + height,
+		u + width,v,
 		u,v,
 	u + width,v,
 	u,v + height,
@@ -148,13 +144,19 @@ void SheetSprite::Draw(ShaderProgram& p)
 	-0.5f * size * aspect, -0.5f * size ,
 	0.5f * size * aspect, -0.5f * size };
 	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
+	glEnableVertexAttribArray(p.positionAttribute);
+	glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
+	glEnableVertexAttribArray(p.texCoordAttribute);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDisableVertexAttribArray(p.positionAttribute);
 	glDisableVertexAttribArray(p.texCoordAttribute);
 }
-
-void Update(Game &g)
+void Entity::Draw(ShaderProgram &p)
 {
+	this->sprite.Draw(p);
+};
+
+void Update(Game &g){
 	glClear(GL_COLOR_BUFFER_BIT);
 	for(int i=0;i<g.entities.size();i++)
 	{

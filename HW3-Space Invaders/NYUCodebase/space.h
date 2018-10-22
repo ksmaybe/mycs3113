@@ -61,7 +61,7 @@ class SheetSprite
 public:
 	SheetSprite();
 	SheetSprite(unsigned int textureID, float u, float v, float width, float height, float size);
-	void Draw(ShaderProgram &program);
+	void Draw(ShaderProgram &p);
 	float size;
 	unsigned int textureID;
 	float u;
@@ -73,7 +73,7 @@ public:
 class Entity
 {
 public:
-	void Draw();
+	void Draw(ShaderProgram &p);
 	glm::vec3 position=glm::vec3(-1.0, 0.0, 0.0);
 	glm::vec3 velocity=glm::vec3(-1.0, 0.0, 0.0);
 	glm::vec3 size=glm::vec3(-1.0, 0.0, 0.0);
@@ -115,6 +115,6 @@ void bounce_wall(Ball &b);
 void check_win(Ball &b, int &score_p1);
 GLuint LoadTexture(const char *filepath);
 void Setup(Game &g);
-void Render(Game &g, ShaderProgram program, float elapsed);
+void Render(Game &g, float elapsed);
 void Runner(Game &g);
 void Update(Game &g);

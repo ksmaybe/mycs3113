@@ -15,22 +15,19 @@ void Setup(Game &g)
 	for(int i=0;i<30;i++)
 	{
 		Entity myEntity;
-		myEntity.sprite = SheetSprite(spriteSheetTexture, 425.0f / gg, 468.0f / gg, 93.0f / gg, 84.0f / gg, 0.2);
+		myEntity.sprite = SheetSprite(spriteSheetTexture, 425.0f / gg, 468.0f / gg, 93.0f / gg, 84.0f / gg, 0.15);
 		g.entities.push_back(myEntity);
 	}
 
 
 }
 
-void Render(Game &g,ShaderProgram program, float elapsed)
+void Render(Game &g, float elapsed)
 {
-	//g.ship.Draw(program);
-	//g.ball.Draw(program);
-	//g.ball.move(elapsed);
-	//for (int i = 0; i < 30; i++)
-	//{
-		//g.entities[i].Draw();
-	//}
+	for (int i = 0; i < 30; i++)
+	{
+		g.entities[i].Draw(g.program);
+	}
 }
 void Runner(Game &g)
 {
