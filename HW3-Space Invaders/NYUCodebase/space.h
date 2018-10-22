@@ -96,7 +96,7 @@ public:
 	bool done;
 	std::vector<Entity> entities;
 	ShaderProgram program;
-
+	GLuint fontTexture;
 
 };
 class Bullet
@@ -118,3 +118,4 @@ void Setup(Game &g);
 void Render(Game &g, float elapsed);
 void Runner(Game &g);
 void Update(Game &g);
+void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing);

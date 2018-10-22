@@ -12,6 +12,7 @@ void Setup(Game &g)
 	g.done = false;
 	float gg = 1024.0f;
 	GLuint spriteSheetTexture = LoadTexture(RESOURCE_FOLDER"sheet.png");
+	g.fontTexture = LoadTexture("font1.png");
 	for(int i=0;i<30;i++)
 	{
 		Entity myEntity;

@@ -164,7 +164,7 @@ void Update(Game &g){
 	}
 }
 
-void DrawText(ShaderProgram &program, int fontTexture, std::string text, float size, float spacing)
+void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing)
 {
 	float character_size = 1.0 / 16.0f;
 	std::vector<float>vertexData;
@@ -188,6 +188,18 @@ void DrawText(ShaderProgram &program, int fontTexture, std::string text, float s
 		texture_x, texture_y + character_size, });
 
 	}
-
+	float* x1 = vertexData.data();
+	float* x2 = texCoordData.data();
+	for (int i = 0; i < text.size(); i++) {
+		glBindTexture(GL_TEXTURE_2D, fontTexture);
+		glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, x1);
+		glEnableVertexAttribArray(p.positionAttribute);
+		glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, x2);
+		glEnableVertexAttribArray(p.texCoordAttribute);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDisableVertexAttribArray(p.positionAttribute);
+		glDisableVertexAttribArray(p.texCoordAttribute);
+		x1++, x2++;
+	}
 }
 

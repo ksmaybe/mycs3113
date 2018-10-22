@@ -76,10 +76,10 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
 
 		g.ship.Draw(program);
-		Render(g,elapsed);
+		//Render(g,elapsed);
 		//Runner(g);
-		Update(g);
-
+		//Update(g);
+		DrawText(program, g.fontTexture, "Hello", 1.0f, 1.0f);
 		SDL_GL_SwapWindow(displayWindow);
 
 
