@@ -30,7 +30,7 @@ public:
 	float v;
 	float x;
 	float y;
-	float width;
+	float width=0;
 	float height = 0;
 };
 
@@ -49,7 +49,6 @@ public:
 
 	float health=1.0;
 	float timeAlive=0.0f;
-	void erase();
 };
 
 class Game

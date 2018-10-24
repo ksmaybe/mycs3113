@@ -36,7 +36,30 @@ void Render(Game &g, float elapsed)
 	for (int i = 0; i < 30; i++)
 	{
 		g.entities[i].sprite.x+=elapsed*g.entities[i].velocity;
+		if(g.entities[i].health==0.0)
+		{
+			Entity NewEntity;
+			g.entities[i] = NewEntity;
+		}
 	}
+	for(int i=0;i<g.bullets.size();i++)
+	{
+		g.bullets[i].sprite.y += g.bullets[i].velocity*elapsed;
+		for (int j=0;j<30;j++)
+		{
+			SheetSprite b = g.bullets[i].sprite;
+			SheetSprite e = g.entities[j].sprite;
+			float dx = abs(b.x - e.x) - ((b.width + e.width) / 2);
+			float dy = abs(b.y - e.y) - ((b.height + e.height) / 2);
+			if(dy<=0&dx<=0)
+			{
+				g.entities[j].health = 0.0;
+				Entity bullet;
+				g.bullets[i]=bullet;
+			}
+		}
+	}
+
 	if(g.entities[5].sprite.x+g.entities[5].sprite.width/2 >1.777f || g.entities[0].sprite.x - g.entities[0].sprite.width / 2<-1.777f)
 	{
 		for(int i=0;i<30;i++)

@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
 				{
 					g.ship.sprite.x -= elapsed * g.speed;
-					//battleship move ship
+					//battleship move left
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
 				{
@@ -72,18 +72,22 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_F)
 				{
 					g.start = true;
-					//battleship move right
+					//change game mode, start game level
+				}
+				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
+				{
+					shootBullet(g);
+					//battleship fire
 				}
 			}
 		}
-
 		if (g.start == false) {
 			DrawText(g.program, g.fontTexture, "Space Invader:Press F", 0.1, 0.0);
 		}
 	
 		
 		else {
-			shootBullet(g);
+			
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
 			Render(g,elapsed);

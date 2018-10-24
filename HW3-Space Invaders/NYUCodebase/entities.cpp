@@ -87,6 +87,10 @@ void Update(Game &g){
 		
 		g.entities[i].sprite.Draw(g.program);
 	}
+	for (int i = 0; i < g.bullets.size(); i++)
+	{
+		g.bullets[i].sprite.Draw(g.program);
+	}
 }
 
 void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing)
@@ -137,22 +141,19 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 void shootBullet(Game &g)
 {
 	Entity newBullet;
-	newBullet.position.x = g.ship.sprite.x;
-	newBullet.position.y = g.ship.sprite.y;
-	newBullet.velocity = 2.0f;
+	float gg = 1024.0f;
+	GLuint spriteSheetTexture = LoadTexture(RESOURCE_FOLDER"sheet.png");
+	newBullet.sprite = SheetSprite(spriteSheetTexture, 856.0f / gg, 57.0f / gg, 9.0f / gg, 37.0f / gg, 0.1);
+	newBullet.sprite.x = g.ship.sprite.x;
+	newBullet.sprite.y = g.ship.sprite.y;
+	newBullet.velocity = 4.0f;
 	newBullet.timeAlive = 0.0f;
 	g.bullets.push_back(newBullet);
 
 };
 bool shouldRemoveBullet(Entity bullet)
 {
-	if(bullet.timeAlive>=2.0f){return true;}
-	else{
-		return false;
-	}
+	if(bullet.timeAlive>=2.0f)
+	{return(true);}
+	return(false);
 }
-
-void Entity::erase()
-{
-	
-};
