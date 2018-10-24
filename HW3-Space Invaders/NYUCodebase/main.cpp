@@ -36,13 +36,16 @@ int main(int argc, char *argv[])
 	glUseProgram(program.programID);
 
     SDL_Event event;
-
+	enum GameMode {
+		STATE_MAIN_MENU, STATE_GAME_LEVEL
+	};
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Game g;
 	Setup(g);
+	
 	g.program = program;
-    while (!g.done) {
+	while (!g.done) {
 
 		//time
 		float ticks = (float)SDL_GetTicks() / 10000.0f;
@@ -50,36 +53,43 @@ int main(int argc, char *argv[])
 		g.lastFrameTicks = ticks;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-                g.done = true;
-            } else if(event.type == SDL_KEYDOWN)
-            {
-	            if(event.key.keysym.scancode==SDL_SCANCODE_LEFT)
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+				g.done = true;
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
 				{
-					g.ship.x-= elapsed * g.speed;
-	            	//battleship move ship
-	            }
-				if(event.key.keysym.scancode==SDL_SCANCODE_RIGHT)
+					g.ship.sprite.x -= elapsed * g.speed;
+					//battleship move ship
+				}
+				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
 				{
-					g.ship.x+= elapsed * g.speed;
+					g.ship.sprite.x += elapsed * g.speed;
 					//battleship move right
 				}
-            }
-        }
+				if (event.key.keysym.scancode == SDL_SCANCODE_F)
+				{
+					g.start = true;
+					//battleship move right
+				}
+			}
+		}
 
-
+		if (g.start == false) {
+			DrawText(g.program, g.fontTexture, "Space Invader:Press F", 0.1, 0.0);
+		}
+	
 		
+		else {
+			shootBullet(g);
+			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT);
+			Render(g,elapsed);
+			Update(g);
 
-
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-		g.ship.Draw(program);
-		//Render(g,elapsed);
-		//Runner(g);
-		//Update(g);
-		DrawText(program, g.fontTexture, "H", 0.5f, 0.1f);
+		}
 		SDL_GL_SwapWindow(displayWindow);
 
 

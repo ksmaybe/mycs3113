@@ -1,88 +1,10 @@
 #include "space.h"
 
 
-void Player::Draw(ShaderProgram &p)
-{
-	glUseProgram(p.programID);
-	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	float vertices1[] = { x + width / 2,y - height / 2,
-		x + width / 2,y + height / 2,
-		x - width / 2,y + height / 2 };
-	p.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	p.SetModelMatrix(modelMatrix);
-	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
-	glEnableVertexAttribArray(p.positionAttribute);
-
-	glDrawArrays(GL_TRIANGLES, 0, 4);
-	glDisableVertexAttribArray(p.positionAttribute);
-	glDisableVertexAttribArray(p.texCoordAttribute);
-}
 
 
 
-void Ball::Draw(ShaderProgram &p)
-{
-	glUseProgram(p.programID);
-	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	float vertices1[] = { x + width / 2,y - height / 2,
-		x + width / 2,y + height / 2,
-		x - width / 2,y + height / 2 };
-	p.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	p.SetModelMatrix(modelMatrix);
-	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
-	glEnableVertexAttribArray(p.positionAttribute);
 
-	glDrawArrays(GL_TRIANGLES, 0, 4);
-	glDisableVertexAttribArray(p.positionAttribute);
-	glDisableVertexAttribArray(p.texCoordAttribute);
-}
-void Ball::reset()
-{
-	x = 0.0f;
-	y = 0.0f;
-	int rightt = (rand() % 100) % 2;
-	int upp = (rand() % 100) % 2;
-	float angle = (rand() % 100) * 45 / 100 * 3.14159265 / 180;
-	if (rightt % 2 == 1) { direction_x = cos(angle); }
-	else { direction_x = -1 * cos(angle); }
-	if (upp % 2 == 1) { direction_y = sin(angle); }
-	else { direction_y = -1 * sin(angle); }
-}
-void Ball::move(float elapsed)
-{
-	x += elapsed * direction_x*velocity;
-	y += elapsed * direction_y*velocity;
-}
-
-void detect_collision(Ball &b, Player p)
-{
-	float dx = abs(b.x - p.x) - ((b.width + p.width) / 2);
-	float dy = abs(b.y - p.y) - ((b.height + p.height) / 2);
-	if ((dy <= 0) & (dx <= 0))
-	{
-		b.direction_x = -1 * b.direction_x;
-	}
-}
-void bounce_wall(Ball &b)
-{
-	if (b.y >= 1.0f)
-	{
-		b.direction_y = -1 * b.direction_y;
-	}
-	if (b.y <= -1.0f)
-	{
-		b.direction_y = -1 * b.direction_y;
-	}
-}
-void check_win(Ball &b, int &score_p1)
-{
-	if (b.x >= 1.777f)
-	{
-		score_p1 += 1;
-		b.reset();
-	}
-}
 
 GLuint LoadTexture(const char *filepath)
 {
@@ -129,6 +51,7 @@ void SheetSprite::Draw(ShaderProgram &p)
 {
 	glBindTexture(GL_TEXTURE_2D, textureID);
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix = glm::translate(modelMatrix,glm::vec3(x,y,0.0));
 	p.SetModelMatrix(modelMatrix);
 	GLfloat texCoords[] = { u,v + height,
 		u + width,v,
@@ -158,8 +81,10 @@ void Entity::Draw(ShaderProgram &p)
 
 void Update(Game &g){
 	glClear(GL_COLOR_BUFFER_BIT);
+	g.ship.sprite.Draw(g.program);
 	for(int i=0;i<g.entities.size();i++)
 	{
+		
 		g.entities[i].sprite.Draw(g.program);
 	}
 }
@@ -174,33 +99,60 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 		int SpriteIndex = (int)text[i];
 		float texture_x = (float)(SpriteIndex % 16) / 16.0f;
 		float texture_y = (float)(SpriteIndex / 16) / 16.0f;
-		vertexData.insert(vertexData.end(), { ((size + spacing) * i) + (-0.5f * size), 0.5f * size,
+		vertexData.insert(vertexData.end(), {
+		((size + spacing) * i) + (-0.5f * size), 0.5f * size,
 		((size + spacing) * i) + (-0.5f * size), -0.5f * size,
 		((size + spacing) * i) + (0.5f * size), 0.5f * size,
 		((size + spacing) * i) + (0.5f * size), -0.5f * size,
 		((size + spacing) * i) + (0.5f * size), 0.5f * size,
-		((size + spacing) * i) + (-0.5f * size), -0.5f * size, });
-		texCoordData.insert(texCoordData.end(), { texture_x, texture_y,
+		((size + spacing) * i) + (-0.5f * size), -0.5f * size });
+		texCoordData.insert(texCoordData.end(), {
+		texture_x, texture_y,
 		texture_x, texture_y + character_size,
 		texture_x + character_size, texture_y,
 		texture_x + character_size, texture_y + character_size,
 		texture_x + character_size, texture_y,
-		texture_x, texture_y + character_size, });
+		texture_x, texture_y + character_size });
 
 	}
-	float* x1 = vertexData.data();
-	float* x2 = texCoordData.data();
+	float* x1 = &vertexData[1];
+	float* x2 = &texCoordData[2];
 	glBindTexture(GL_TEXTURE_2D, fontTexture);
-	for (int i = 0; i < vertexData.size()/2; i++) {
-		
-		glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, x1);
-		glEnableVertexAttribArray(p.positionAttribute);
-		glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, x2);
-		glEnableVertexAttribArray(p.texCoordAttribute);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDisableVertexAttribArray(p.positionAttribute);
-		glDisableVertexAttribArray(p.texCoordAttribute);
-		++x1, ++x2;
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix=translate(modelMatrix, glm::vec3( -1.3, 0.0, 0.0));
+	p.SetModelMatrix(modelMatrix);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
+	glEnableVertexAttribArray(p.positionAttribute);
+	glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
+	glEnableVertexAttribArray(p.texCoordAttribute);
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+
+	glDrawArrays(GL_TRIANGLES, 0, text.size() * 6);
+
+	glDisableVertexAttribArray(p.positionAttribute);
+	glDisableVertexAttribArray(p.texCoordAttribute);
+
+}
+
+void shootBullet(Game &g)
+{
+	Entity newBullet;
+	newBullet.position.x = g.ship.sprite.x;
+	newBullet.position.y = g.ship.sprite.y;
+	newBullet.velocity = 2.0f;
+	newBullet.timeAlive = 0.0f;
+	g.bullets.push_back(newBullet);
+
+};
+bool shouldRemoveBullet(Entity bullet)
+{
+	if(bullet.timeAlive>=2.0f){return true;}
+	else{
+		return false;
 	}
 }
 
+void Entity::erase()
+{
+	
+};
