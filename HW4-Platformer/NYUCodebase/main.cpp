@@ -54,34 +54,6 @@ int main(int argc, char *argv[])
 		float accumulator = 0.0f;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-				g.done = true;
-			}
-			else if (event.type == SDL_KEYDOWN)
-			{
-				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
-				{
-					g.ship.sprite.x -= elapsed * g.speed;
-					//battleship move left
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
-				{
-					g.ship.sprite.x += elapsed * g.speed;
-					//battleship move right
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_F)
-				{
-					g.start = true;
-					//change game mode, start game level
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
-				{
-					shootBullet(g);
-					//battleship fire
-				}
-			}
-		}
 		if (g.start == false) {
 			DrawText(g.program, g.fontTexture, "Space Invader:Press F", 0.1, 0.0);
 		}

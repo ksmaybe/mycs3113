@@ -36,13 +36,17 @@ public:
 	float height = 0;
 };
 
+enum EntityType{ENTITY_PLAYER,ENTITY_ENEMY};
 
 class Entity
 {
 public:
+	void Update(float elapsed);
 	void Draw(ShaderProgram &p);
+	bool CollidesWith(Entity &entity);
 	glm::vec3 position=glm::vec3(-1.0, 0.0, 0.0);
-	float velocity=3.0;
+	float velocity=0.0;
+	float acceleration = 0.0;
 	glm::vec3 size=glm::vec3(-1.0, 0.0, 0.0);
 
 	float rotation=0.0;
@@ -51,6 +55,10 @@ public:
 
 	float health=1.0;
 	float timeAlive=0.0f;
+
+	bool isStatic;
+	EntityType entityType;
+
 };
 
 class Game
