@@ -24,6 +24,7 @@
 
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
+#define TILE_SIZE 16
 
 class SheetSprite
 {

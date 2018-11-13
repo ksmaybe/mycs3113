@@ -240,5 +240,28 @@ bool readEntityData(std::ifstream &stream)
 		std::istringstream sSTream(line);
 		std::string key, value;
 
-	})
+		if(key=="type")
+		{
+			type = value;
+		}else if(key=="location")
+		{
+			std::istringstream lineStream(value);
+			std::string xPosition, yPosition;
+			std::getline(lineStream, xPosition, ',');
+			std::getline(lineStream, yPosition, ',');
+
+			float placeX = atoi(xPosition.c_str())*TILE_SIZE;
+			float placeY = atoi(yPosition.c_str())*-TILE_SIZE;
+
+			placeEntity(type, placeX, placeY);
+
+		}
+	}
+	return true;
+}
+
+void placeEntity(std::string type,float x,float y)
+{
+	Entity myEntity;
+
 }
