@@ -11,6 +11,11 @@
 #include "stb_image.h"
 #include <iterator>
 #include <vector>
+#include <fstream>
+#include <string>
+#include <iostream>
+#include <sstream>
+
 #ifdef _WINDOWS
 #define RESOURCE_FOLDER ""
 #else
@@ -82,3 +87,5 @@ void Runner(Game &g);
 void Update(Game &g);
 void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing);
 void shootBullet(Game &g);
+bool readHeader(std::ifstream &stream);
+bool readLayerData(std::ifstream &stream);

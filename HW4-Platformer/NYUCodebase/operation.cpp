@@ -1,6 +1,24 @@
 #include "space.h"
 void Setup(Game &g)
 {
+	std::ifstream infile("mymap.txt");
+	std::string line;
+	while(std::getline(infile,line))
+	{
+		if(line=="[header]")
+		{
+			if(!readHeader(infile))
+			{
+				return;
+			} else if(line=="[layer]")
+			{
+				readLayerData(infile);
+			} else if(line=="[ObjectsLayer]")
+			{
+				readEntityData(infile);
+			}
+		}
+	}
 	g.lastFrameTicks = 0.0f;
 
 	g.speed = 100.0f;

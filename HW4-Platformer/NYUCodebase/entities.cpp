@@ -157,3 +157,65 @@ bool shouldRemoveBullet(Entity bullet)
 	{return(true);}
 	return(false);
 }
+
+int mapHeight;
+
+int mapWidth;
+
+bool readHeader(std::ifstream &stream)
+{
+	std::string line;
+	mapWidth = -1;
+	mapHeight = -1;
+	while(std::getline(stream,line))
+	{
+		if (line == "") { break; }
+
+		std::istringstream sStream(line);
+		std::string key, value;
+		std::getline(sStream, key, '=');
+		std::getline(sStream, value);
+
+		if(key=="width")
+		{
+			mapWidth = atoi(value.c_str());
+		} else if (key=="height")
+		{
+			mapHeight = atoi(value.c_str());
+		}
+	}
+	if (mapWidth == -1 || mapHeight == -1) { return false; }
+	else {//allocate our map data
+		unsigned char** levelData = new unsigned char*[mapHeight];
+		for(int i=0;i<mapHeight;++i)
+		{
+			levelData[i] = new unsigned char[mapWidth];
+		}
+		return true;
+	}
+}
+
+bool readLayerData(std::ifstream &stream)
+{
+	std::string line;
+	while(std::getline(stream,line))
+	{
+		if (line == "") { break; }
+		std::istringstream sStream(line);
+		std::string key, value;
+		std::getline(sStream, key, '=');
+		std::getline(sStream, value);
+		if(key=="data")
+		{for (int y=0;y<mapHeight;y++)
+		{
+			std::getline(stream, line);
+			std::istringstream lineStream(line);
+			std::string tile;
+			for(int x=0;x<mapWidth;x++)
+			{
+				std::getline(lineStream)
+			}
+		}
+		}
+	}
+}
