@@ -161,7 +161,7 @@ bool shouldRemoveBullet(Entity bullet)
 int mapHeight;
 
 int mapWidth;
-
+unsigned char** levelData;
 bool readHeader(std::ifstream &stream)
 {
 	std::string line;
@@ -186,7 +186,7 @@ bool readHeader(std::ifstream &stream)
 	}
 	if (mapWidth == -1 || mapHeight == -1) { return false; }
 	else {//allocate our map data
-		unsigned char** levelData = new unsigned char*[mapHeight];
+		levelData = new unsigned char*[mapHeight];
 		for(int i=0;i<mapHeight;++i)
 		{
 			levelData[i] = new unsigned char[mapWidth];
@@ -213,9 +213,32 @@ bool readLayerData(std::ifstream &stream)
 			std::string tile;
 			for(int x=0;x<mapWidth;x++)
 			{
-				std::getline(lineStream)
+				std::getline(lineStream, tile, ',');
+				unsigned char val = (unsigned char)atoi(tile.c_str());
+				if(val>0)
+				{	//be careful the tiles in this format are indexed from 1 not 0
+					levelData[y][x] = val - 1;
+				} else
+				{
+					levelData[y][x] = 0;
+				}
 			}
 		}
 		}
 	}
+	return true;
+}
+
+bool readEntityData(std::ifstream &stream)
+{
+	std::string line;
+	std::string type;
+
+	while(std::getline(stream,line)
+	{
+		if(line==""){break; }
+		std::istringstream sSTream(line);
+		std::string key, value;
+
+	})
 }
