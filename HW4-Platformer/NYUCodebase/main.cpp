@@ -11,7 +11,7 @@ SDL_Window* displayWindow;
 int main(int argc, char *argv[])
 {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("I really hope this space thing works", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("I really hope this platform thing works", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
@@ -54,8 +54,9 @@ int main(int argc, char *argv[])
 		float accumulator = 0.0f;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
+	
 		if (g.start == false) {
-			DrawText(g.program, g.fontTexture, "Space Invader:Press F", 0.1, 0.0);
+			DrawText(g.program, g.fontTexture, "Platformer:Press F", 0.1, 0.0);
 		}
 	
 		
@@ -63,8 +64,8 @@ int main(int argc, char *argv[])
 			
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			Render(g,elapsed);
-			Update(g);
+			//Render(g,elapsed);
+			//Update(g);
 
 		}
 		SDL_GL_SwapWindow(displayWindow);
