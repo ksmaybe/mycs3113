@@ -79,14 +79,16 @@ public:
 
 	float health=1.0;
 	float timeAlive=0.0f;
+	bool isStatic=false;
 };
 
 class Game
 {
 public:
+	float gravity = 4.0f;
 	float tileSize = 0.1;
 	int sprite_count_x = 16;
-	int sprite_count_y = 8; 
+	int sprite_count_y = 10; 
 	std::vector<float> vertices;
 	std::vector<float> texCoords;
 	FlareMap map;
@@ -99,6 +101,7 @@ public:
 	GLuint fontTexture;
 	bool start;
 	std::vector<Entity> bullets;
+	std::vector<int> ground;
 	unsigned int platformSheetTexture;
 };
 
@@ -111,3 +114,5 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 void shootBullet(Game &g);
 void drawMap(Game &g);
 void worldToTileCoordinates(Game &g, float worldX, float worldY, int *gridX, int *gridY);
+bool collisionBottom(Game &g);
+bool collisionBot(Game &g);

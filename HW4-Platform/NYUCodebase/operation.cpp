@@ -27,6 +27,7 @@ void Setup(Game &g)
 					});
 			}
 		}
+		g.ground.push_back(532);
 	}
 	g.platformSheetTexture=LoadTexture(RESOURCE_FOLDER"arne_sprites.png");
 	g.lastFrameTicks = 0.0f;
@@ -42,6 +43,8 @@ void Setup(Game &g)
 	g.ship.sprite = SheetSprite(spriteSheetTexture, 0.0f / gg, 941.0f / gg, 112.0f / gg, 75.0f / gg, 0.15);
 	g.ship.sprite.x = x;
 	g.ship.sprite.y = y;
+	g.ship.sprite.x += 2.0f;
+	g.ship.sprite.y -= 1.0f;
 	g.fontTexture = LoadTexture("font1.png");
 	for(int i=0;i<30;i++)
 	{
@@ -61,6 +64,12 @@ void Setup(Game &g)
 
 void Render(Game &g, float elapsed)
 {
+	bool k=collisionBot(g);
+	if(!g.ship.isStatic)
+	{
+		g.ship.sprite.y -= elapsed * g.gravity;
+	}
+	
 	for (int i = 0; i < 30; i++)
 	{
 		g.entities[i].sprite.x+=elapsed*g.entities[i].velocity;
@@ -70,6 +79,7 @@ void Render(Game &g, float elapsed)
 			g.entities[i] = NewEntity;
 		}
 	}
+
 	for(int i=0;i<g.bullets.size();i++)
 	{
 		g.bullets[i].sprite.y += g.bullets[i].velocity*elapsed;

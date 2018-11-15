@@ -298,3 +298,38 @@ void drawMap(Game &g) {
 	glDisableVertexAttribArray(g.program.positionAttribute);
 	glDisableVertexAttribArray(g.program.texCoordAttribute);
 }
+bool collisionBottom(Game &g)
+{
+	int block_x = 0;
+	int block_y = 0;
+	block_x = (int(g.ship.sprite.x-2.0f) / (g.tileSize));
+	block_y = (int(g.ship.sprite.y+1.0f) / (-g.tileSize));
+	for (int grounding : g.ground)
+	{
+		if (g.map.mapData[block_y + 1][block_x] == grounding) {
+			g.ship.isStatic = true;
+			return true;
+		}
+	}
+		g.ship.isStatic = false;
+		return false;
+}
+
+bool collisionBot(Game &g)
+{
+	float bx = g.ship.sprite.x;
+	float by = g.ship.sprite.y;
+	for (int y = 0; y < g.map.entities.size(); y++) {
+
+		FlareMapEntity ey = g.map.entities[y];
+		float dx = abs(bx - ey.x) - ((g.ship.sprite.width + g.tileSize) / 2);
+		float dy = abs(by - ey.y) - ((g.ship.sprite.height + g.tileSize) / 2);
+		if (dy <= 0 & dx <= 0)
+		{
+			g.ship.isStatic = true;
+			return true;
+		}
+	}
+		g.ship.isStatic = false;
+		return false;
+}
