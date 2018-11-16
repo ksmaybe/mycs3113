@@ -10,19 +10,27 @@ void Setup(Game &g)
 			if(g.map.mapData[y][x]!=0)
 			{
 				int z = g.map.mapData[y][x];
-				if(z==2){
+				if(z==532){
 					FlareMapEntity solid;
 					solid.type = "solid";
-					solid.x = x;
-					solid.y = y;
+					solid.x = (x/g.map.mapWidth)-(g.map.mapWidth/2)*1.777f;
+					solid.y = (y / g.map.mapHeight) - (g.map.mapHeight / 2)*1.0f;
 					g.map.entities.push_back(solid);
 				}
 			}
 		}
 	}
+	g.roadTexture = LoadTexture(RESOURCE_FOLDER"arne_sprites.png");
+	for (auto& entitie : g.map.entities)
+	{
+		Entity ent;
+		ent.sprite.x = entitie.x;
+		ent.sprite.y = entitie.y;
+		ent.sprite.textureID = g.roadTexture;
+		g.solids.push_back(ent);
+	}
 
-
-	g.roadTexture = LoadTexture(RESOURCE_FOLDER"dirt-tiles.png");
+	
 	g.lastFrameTicks = 0.0f;
 
 	g.speed = 100.0f;
@@ -39,6 +47,9 @@ void Setup(Game &g)
 
 void Render(Game &g, float elapsed)
 {
-
+	for(Entity i:g.solids)
+	{
+		i.sprite.Draw(g.program);
+	}
 
 }

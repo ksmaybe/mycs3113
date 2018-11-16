@@ -110,7 +110,7 @@ public:
 	std::vector<Entity> entities;
 	std::vector<float> vertices;
 	std::vector<float> texCoords;
-	std::vector<int> solids;
+	std::vector<Entity> solids;
 	ShaderProgram program;
 	GLuint fontTexture;
 	bool start;
