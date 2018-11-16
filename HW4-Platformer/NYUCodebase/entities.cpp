@@ -279,7 +279,7 @@ void FlareMap::Load(const std::string fileName) {
 		else if (line == "[layer]") {
 			ReadLayerData(infile);
 		}
-		else if (line == "[ObjectsLayer]") {
+		else if (line == "[Object Layer]") {
 			ReadEntityData(infile);
 		}
 	}
@@ -318,21 +318,21 @@ bool collisionBottom(Game &g)
 		return false;
 }
 
-bool collisionBot(Game &g)
+bool collisionBot(Game &g,Entity &e)
 {
-	float bx = g.ship.sprite.x;
-	float by = g.ship.sprite.y;
+	float bx = e.sprite.x;
+	float by = e.sprite.y;
 	for (int y = 0; y < g.map.ground.size(); y++) {
 
 		FlareMapEntity ey = g.map.ground[y];
-		float dx = abs(bx - ey.x) - ((g.ship.sprite.width + g.tileSize) / 2);
-		float dy = abs(by - ey.y) - ((g.ship.sprite.height + g.tileSize) / 2);
+		float dx = abs(bx - ey.x) - ((e.sprite.width + g.tileSize) / 2);
+		float dy = abs(by - ey.y) - ((e.sprite.height + g.tileSize) / 2);
 		if (dy <= 0 & dx <= 0)
 		{
-			g.ship.isStatic = true;
+			e.isStatic = true;
 			return true;
 		}
 	}
-		g.ship.isStatic = false;
+		e.isStatic = false;
 		return false;
 }

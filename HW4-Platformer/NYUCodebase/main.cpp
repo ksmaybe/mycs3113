@@ -99,10 +99,14 @@ int main(int argc, char *argv[])
 			g.program.SetViewMatrix(viewMatrix);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			bool k = collisionBot(g);
+			bool k = collisionBot(g,g.ship);
 			Render(g,elapsed);
 			Update(g);
 			drawMap(g);
+			for(int i=0;i<g.enemies.size();i++)
+			{
+				g.enemies[i].sprite.Draw(g.program);
+			}
 		}
 		SDL_GL_SwapWindow(displayWindow);
 

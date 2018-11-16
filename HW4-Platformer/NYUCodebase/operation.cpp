@@ -62,13 +62,21 @@ void Setup(Game &g)
 		myEntity.sprite.y = y;
 		g.entities.push_back(myEntity);
 	}
-	
+	for(int i=0;i<4;i++)
+	{
+		FlareMapEntity haha = g.map.entities[i];
+		Entity myEntity;
+		myEntity.sprite = SheetSprite(spriteSheetTexture, 425.0f / gg, 468.0f / gg, 93.0f / gg, 84.0f / gg, 0.1);
+		myEntity.sprite.x = haha.x*g.tileSize;
+		myEntity.sprite.y = haha.y*-g.tileSize+0.3f;
+		g.enemies.push_back(myEntity);
+	}
 
 }
 
 void Render(Game &g, float elapsed)
 {
-	bool k=collisionBot(g);
+	bool k=collisionBot(g,g.ship);
 	if(!g.ship.isStatic)
 	{
 		g.ship.sprite.y -= elapsed * g.gravity;
@@ -83,23 +91,39 @@ void Render(Game &g, float elapsed)
 			g.entities[i] = NewEntity;
 		}
 	}
+	for(Entity &e:g.enemies)
+	{
+		bool er = collisionBot(g, e);
+		if (!e.isStatic)
+		{
+			e.sprite.y -= elapsed * g.gravity;
+		}
 
+	}
 	for(int i=0;i<g.bullets.size();i++)
 	{
 		if (g.bullets[i].faceLeft == true) { g.bullets[i].sprite.x -= g.bullets[i].velocity*elapsed; }
 		else{ g.bullets[i].sprite.x += g.bullets[i].velocity*elapsed; }
-		for (int j=0;j<30;j++)
+		for (int j=0;j<g.enemies.size();j++)
 		{
 			SheetSprite b = g.bullets[i].sprite;
-			SheetSprite e = g.entities[j].sprite;
+			SheetSprite e = g.enemies[j].sprite;
 			float dx = abs(b.x - e.x) - ((b.width + e.width) / 2);
 			float dy = abs(b.y - e.y) - ((b.height + e.height) / 2);
 			if(dy<=0&dx<=0)
 			{
-				g.entities[j].health = 0.0;
+				g.enemies[j].health = 0.0;
 				Entity bullet;
 				g.bullets[i]=bullet;
 			}
+		}
+	}
+	for (int i = 0; i < g.enemies.size(); i++)
+	{
+		if (g.enemies[i].health == 0.0)
+		{
+			Entity NewEntity;
+			g.enemies[i] = NewEntity;
 		}
 	}
 

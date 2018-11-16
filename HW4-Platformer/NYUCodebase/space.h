@@ -93,6 +93,7 @@ public:
 	int sprite_count_y = 10; 
 	std::vector<float> vertices;
 	std::vector<float> texCoords;
+	std::vector<Entity> enemies;
 	FlareMap map;
 	Entity ship;
 	float lastFrameTicks;
@@ -117,4 +118,4 @@ void shootBullet(Game &g);
 void drawMap(Game &g);
 void worldToTileCoordinates(Game &g, float worldX, float worldY, int *gridX, int *gridY);
 bool collisionBottom(Game &g);
-bool collisionBot(Game &g);
+bool collisionBot(Game &g,Entity &e);
