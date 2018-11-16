@@ -25,6 +25,10 @@ void Setup(Game &g)
 					u + spriteWidth, v + (spriteHeight),
 					u + spriteWidth, v
 					});
+				FlareMapEntity ground;
+				ground.x = x*g.tileSize;
+				ground.y = -y*g.tileSize;
+				g.map.ground.push_back(ground);
 			}
 		}
 		g.ground.push_back(532);
@@ -32,7 +36,7 @@ void Setup(Game &g)
 	g.platformSheetTexture=LoadTexture(RESOURCE_FOLDER"arne_sprites.png");
 	g.lastFrameTicks = 0.0f;
 
-	g.speed = 1000.0f;
+	g.speed = 30.0f;
 	float x = 0.0f;
 	float y = -0.85f;
 	
@@ -58,7 +62,7 @@ void Setup(Game &g)
 		myEntity.sprite.y = y;
 		g.entities.push_back(myEntity);
 	}
-
+	
 
 }
 
@@ -82,7 +86,8 @@ void Render(Game &g, float elapsed)
 
 	for(int i=0;i<g.bullets.size();i++)
 	{
-		g.bullets[i].sprite.y += g.bullets[i].velocity*elapsed;
+		if (g.bullets[i].faceLeft == true) { g.bullets[i].sprite.x -= g.bullets[i].velocity*elapsed; }
+		else{ g.bullets[i].sprite.x += g.bullets[i].velocity*elapsed; }
 		for (int j=0;j<30;j++)
 		{
 			SheetSprite b = g.bullets[i].sprite;

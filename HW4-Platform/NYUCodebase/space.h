@@ -39,6 +39,7 @@ public:
 	int mapHeight;
 	unsigned int **mapData;
 	std::vector<FlareMapEntity> entities;
+	std::vector<FlareMapEntity> ground;
 
 private:
 
@@ -72,6 +73,7 @@ public:
 	glm::vec3 position=glm::vec3(-1.0, 0.0, 0.0);
 	float velocity=3.0;
 	glm::vec3 size=glm::vec3(-1.0, 0.0, 0.0);
+	bool faceLeft;
 
 	float rotation=0.0;
 

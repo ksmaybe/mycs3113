@@ -151,6 +151,9 @@ void shootBullet(Game &g)
 	newBullet.sprite.y = g.ship.sprite.y;
 	newBullet.velocity = 4.0f;
 	newBullet.timeAlive = 0.0f;
+	if(g.ship.faceLeft==true){newBullet.faceLeft = true;}
+	else { newBullet.faceLeft = false; }
+
 	g.bullets.push_back(newBullet);
 
 };
@@ -319,9 +322,9 @@ bool collisionBot(Game &g)
 {
 	float bx = g.ship.sprite.x;
 	float by = g.ship.sprite.y;
-	for (int y = 0; y < g.map.entities.size(); y++) {
+	for (int y = 0; y < g.map.ground.size(); y++) {
 
-		FlareMapEntity ey = g.map.entities[y];
+		FlareMapEntity ey = g.map.ground[y];
 		float dx = abs(bx - ey.x) - ((g.ship.sprite.width + g.tileSize) / 2);
 		float dy = abs(by - ey.y) - ((g.ship.sprite.height + g.tileSize) / 2);
 		if (dy <= 0 & dx <= 0)

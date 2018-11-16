@@ -62,11 +62,13 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
 				{
 					g.ship.sprite.x -= elapsed * g.speed;
+					g.ship.faceLeft = true;
 					//battleship move left
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
 				{
 					g.ship.sprite.x += elapsed * g.speed;
+					g.ship.faceLeft = false;
 					//battleship move right
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_F)
@@ -81,13 +83,8 @@ int main(int argc, char *argv[])
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_UP)
 				{
-					g.ship.sprite.y += elapsed * g.speed;
-					//battleship fire
-				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_DOWN)
-				{
-					g.ship.sprite.y -= elapsed * g.speed;
-					//battleship fire
+					g.ship.sprite.y += elapsed * g.speed*4;
+					//battleship jump
 				}
 			}
 		}
@@ -102,7 +99,7 @@ int main(int argc, char *argv[])
 			g.program.SetViewMatrix(viewMatrix);
 			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT);
-			
+			bool k = collisionBot(g);
 			Render(g,elapsed);
 			Update(g);
 			drawMap(g);
