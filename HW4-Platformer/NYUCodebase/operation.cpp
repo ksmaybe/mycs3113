@@ -66,6 +66,7 @@ void Setup(Game &g)
 	{
 		FlareMapEntity haha = g.map.entities[i];
 		Entity myEntity;
+		myEntity.health = 1.0;
 		myEntity.sprite = SheetSprite(spriteSheetTexture, 425.0f / gg, 468.0f / gg, 93.0f / gg, 84.0f / gg, 0.1);
 		myEntity.sprite.x = haha.x*g.tileSize;
 		myEntity.sprite.y = haha.y*-g.tileSize+0.3f;
@@ -112,11 +113,13 @@ void Render(Game &g, float elapsed)
 			float dy = abs(b.y - e.y) - ((b.height + e.height) / 2);
 			if(dy<=0&dx<=0)
 			{
+				if (g.enemies[j].health == 1.0) { Mix_PlayChannel(-1, g.hitSound, 0); }
 				g.enemies[j].health = 0.0;
 				Entity bullet;
 				g.bullets[i]=bullet;
 			}
 		}
+	
 	}
 	for (int i = 0; i < g.enemies.size(); i++)
 	{

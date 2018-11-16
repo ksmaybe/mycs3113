@@ -16,6 +16,7 @@
 #include <iostream>
 #include <sstream>
 #include <cassert>
+#include <SDL_mixer.h>
 #ifdef _WINDOWS
 #define RESOURCE_FOLDER ""
 #else
@@ -79,7 +80,7 @@ public:
 
 	SheetSprite sprite;
 
-	float health=1.0;
+	float health=0.0;
 	float timeAlive=0.0f;
 	bool isStatic=false;
 };
@@ -90,7 +91,7 @@ public:
 	float gravity = 4.0f;
 	float tileSize = 0.1;
 	int sprite_count_x = 16;
-	int sprite_count_y = 10; 
+	int sprite_count_y = 10;
 	std::vector<float> vertices;
 	std::vector<float> texCoords;
 	std::vector<Entity> enemies;
@@ -106,6 +107,30 @@ public:
 	std::vector<Entity> bullets;
 	std::vector<int> ground;
 	unsigned int platformSheetTexture;
+	Mix_Chunk *shootSound;
+	Mix_Chunk *hitSound;
+	bool enemyKilled = false;
+};
+
+class MixerSound
+{
+public:
+	Uint32 offset;
+	Uint32 length;
+	Uint8 *buffer;
+	float volume;
+	SDL_AudioFormat format;
+	bool loaded;
+	bool playing;
+	bool loop;
+	Mix_Chunk *shootSound;
+	Mix_Chunk *hitSound;
+};
+
+class DemoApp
+{
+public:
+	std::vector<MixerSound> mixSounds;
 };
 
 GLuint LoadTexture(const char *filepath);

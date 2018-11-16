@@ -43,10 +43,17 @@ int main(int argc, char *argv[])
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Game g;
 	Setup(g);
-	
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	g.program = program;
-	while (!g.done) {
+	g.shootSound = Mix_LoadWAV("Shoot.wav");
+	g.hitSound = Mix_LoadWAV("Hit1.wav");
+	Mix_Music *music;
+	music = Mix_LoadMUS("Adventure.mp3");
 
+	Mix_PlayMusic(music, -1);
+
+
+	while (!g.done) {
 		//time
 		float ticks = (float)SDL_GetTicks() / 10000.0f;
 		float elapsed = ticks - g.lastFrameTicks;
@@ -79,9 +86,10 @@ int main(int argc, char *argv[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE)
 				{
 					shootBullet(g);
+					Mix_PlayChannel(-1,g.shootSound,0);
 					//battleship fire
 				}
-				if (event.key.keysym.scancode == SDL_SCANCODE_UP)
+				if (event.key.keysym.scancode == SDL_SCANCODE_A)
 				{
 					g.ship.sprite.y += elapsed * g.speed*4;
 					//battleship jump
@@ -101,6 +109,7 @@ int main(int argc, char *argv[])
 			glClear(GL_COLOR_BUFFER_BIT);
 			bool k = collisionBot(g,g.ship);
 			Render(g,elapsed);
+			g.enemyKilled = false;
 			Update(g);
 			drawMap(g);
 			for(int i=0;i<g.enemies.size();i++)
