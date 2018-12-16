@@ -45,7 +45,8 @@ int main(int argc, char *argv[])
 	Setup(g);
 	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 	g.program = program;
-	g.shootSound = Mix_LoadWAV("Shoot.wav");
+
+	g.shootSound = Mix_LoadWAV("Shoot.wav");
 	g.hitSound = Mix_LoadWAV("Hit1.wav");
 	Mix_Music *music;
 	music = Mix_LoadMUS("Adventure.mp3");

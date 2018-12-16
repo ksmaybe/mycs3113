@@ -61,6 +61,13 @@ int main(int argc, char *argv[])
 		g.lastFrameTicks = ticks;
 
 		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
+		if(keyboard[SDL_SCANCODE_LEFT])
+		{
+			g.ship.sprite.x -= elapsed * g.speed;
+			g.ship.faceLeft = true;
+			//battleship move left
+			
+		}
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
 				g.done = true;
@@ -69,8 +76,8 @@ int main(int argc, char *argv[])
 			{
 				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
 				{
-					g.ship.sprite.x -= elapsed * g.speed;
-					g.ship.faceLeft = true;
+					//g.ship.sprite.x -= elapsed * g.speed;
+					//g.ship.faceLeft = true;
 					//battleship move left
 				}
 				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
