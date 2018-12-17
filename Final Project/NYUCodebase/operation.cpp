@@ -77,8 +77,11 @@ void Render(Game &g, float elapsed)
 	bool k=collisionBot(g,g.ship);
 	if(!g.ship.isStatic)
 	{
-		g.ship.sprite.y -= elapsed * g.gravity;
+		g.ship.velocity -= g.gravity*0.1;
+		//g.ship.sprite.y -= elapsed * g.gravity;
+		g.ship.sprite.y += g.ship.velocity*elapsed;
 	}
+	else { g.ship.velocity = 0; }
 	
 	/*for (int i = 0; i < 30; i++)
 	{
@@ -94,6 +97,7 @@ void Render(Game &g, float elapsed)
 		bool er = collisionBot(g, e);
 		if (!e.isStatic)
 		{
+
 			e.sprite.y -= elapsed * g.gravity;
 		}
 
@@ -126,8 +130,8 @@ void Render(Game &g, float elapsed)
 			Entity NewEntity;
 			g.enemies[i] = NewEntity;
 		}
-		SheetSprite b = g.ship.sprite;
-		SheetSprite e = g.enemies[i].sprite;
+		SheetSprite& b = g.ship.sprite;
+		SheetSprite& e = g.enemies[i].sprite;
 		float dx = abs(b.x - e.x) - ((b.width + e.width) / 2);
 		float dy = abs(b.y - e.y) - ((b.height + e.height) / 2);
 		if (dy <= 0 & dx <= 0)
@@ -135,11 +139,18 @@ void Render(Game &g, float elapsed)
 			if (g.enemies[i].type != "GATE") { g.quit = true; }
 			else
 			{
-
 				g.done = true;
-
 			}
 		}
+		else if(dy<=0 & g.enemies[i].type!="GATE")
+		{
+			if(b.x<e.x)
+			{
+				e.x -= elapsed * g.speed*0.2;
+			}
+			else { e.x += elapsed * g.speed*0.2; }
+		}
+
 	}
 
 }

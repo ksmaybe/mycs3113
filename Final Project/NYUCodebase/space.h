@@ -73,6 +73,7 @@ public:
 	void Draw(ShaderProgram &p);
 	glm::vec3 position=glm::vec3(-1.0, 0.0, 0.0);
 	float velocity=3.0;
+	float acceleration = 0.0;
 	glm::vec3 size=glm::vec3(-1.0, 0.0, 0.0);
 	bool faceLeft;
 
