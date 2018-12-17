@@ -138,6 +138,8 @@ int main(int argc, char *argv[])
 
 		SDL_GL_SwapWindow(displayWindow);
     }
+	Mix_HaltMusic();
+	Mix_HaltChannel(-1);
 	SDL_Quit();
 	g.done = false;
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -166,10 +168,6 @@ int main(int argc, char *argv[])
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-
-	Mix_HaltMusic();
-	Mix_HaltChannel(-1);
-	
 	Game x;
 	g = x;
 	g.map.entities.clear();
@@ -181,10 +179,9 @@ int main(int argc, char *argv[])
 
 	g.shootSound = Mix_LoadWAV("Shoot.wav");
 	g.hitSound = Mix_LoadWAV("Hit1.wav");
-	Mix_Music *music1;
-	music1 = Mix_LoadMUS("Adventure.mp3");
+	music = Mix_LoadMUS("Adventure.mp3");
 
-	Mix_PlayMusic(music1, -1);
+	Mix_PlayMusic(music, -1);
 
 
 	g.program = program;

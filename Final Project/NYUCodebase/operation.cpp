@@ -135,6 +135,7 @@ void Render(Game &g, float elapsed)
 			if (g.enemies[i].type != "GATE") { g.quit = true; }
 			else
 			{
+
 				g.done = true;
 
 			}
