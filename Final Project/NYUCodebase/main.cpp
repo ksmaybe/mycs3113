@@ -10,9 +10,74 @@ SDL_Window* displayWindow;
 
 int main(int argc, char *argv[])
 {
+	
+	bool start = false;
+	SDL_Init(SDL_INIT_VIDEO);
+	displayWindow = SDL_CreateWindow("Final Fantasy", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
+	SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
+	SDL_GL_MakeCurrent(displayWindow, context);
+
+#ifdef _WINDOWS
+	glewInit();
+
+#endif
+	glViewport(0, 0, 858, 480);
+
+	ShaderProgram program{};
+	program.Load(RESOURCE_FOLDER"vertex_textured1.glsl", RESOURCE_FOLDER"fragment_textured1.glsl");
+	glm::mat4 projectionMatrix1 = glm::mat4(1.0f);
+	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
+	glm::mat4 viewMatrix1 = glm::mat4(1.0f);
+
+
+
+	projectionMatrix1 = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
+
+	program.SetProjectionMatrix(projectionMatrix1);
+	program.SetViewMatrix(viewMatrix1);
+	glUseProgram(program.programID);
+
+	SDL_Event event;
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	GLuint fontTexture = LoadTexture("font1.png");
+
+	while (!start) {
+			//time
+
+			const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
+
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+					break;
+				}
+				else if (event.type == SDL_KEYDOWN)
+				{
+					if (event.key.keysym.scancode == SDL_SCANCODE_F)
+					{
+						start = true;
+						//change game mode, start game level
+					}
+
+			
+				}
+			}
+			if (start == false) {
+
+				/*glVertexAttribPointer(program.positionAttribute, 3, GL_FLOAT, false, 0, vertices);
+				glEnableVertexAttribArray(program.positionAttribute);
+				glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 0, colors);
+				glEnableVertexAttribArray(colorAttribute);*/
+
+				DrawText(program, fontTexture, "Final Fantasy :Press F", 0.1, 0.0);
+			}
+		SDL_GL_SwapWindow(displayWindow);
+	}
+	SDL_Quit();
+	glClear(GL_COLOR_BUFFER_BIT);
+	
     SDL_Init(SDL_INIT_VIDEO);
     displayWindow = SDL_CreateWindow("Final Fantasy Part 1", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 858, 480, SDL_WINDOW_OPENGL);
-    SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
 
 #ifdef _WINDOWS
@@ -21,10 +86,8 @@ int main(int argc, char *argv[])
 #endif
 	glViewport(0, 0, 858, 480);
 
-	ShaderProgram program{};
 	program.Load(RESOURCE_FOLDER"vertex_textured.glsl", RESOURCE_FOLDER"fragment_textured.glsl");
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
-	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
 
 
@@ -35,7 +98,7 @@ int main(int argc, char *argv[])
 	program.SetViewMatrix(viewMatrix);
 	glUseProgram(program.programID);
 
-    SDL_Event event;
+
 	enum GameMode {
 		STATE_MAIN_MENU, STATE_GAME_LEVEL
 	};
@@ -52,6 +115,7 @@ int main(int argc, char *argv[])
 	music = Mix_LoadMUS("Adventure.mp3");
 
 	Mix_PlayMusic(music, -1);
+
 
 
 	while (!g.done) {
@@ -109,8 +173,13 @@ int main(int argc, char *argv[])
 			}
 		}
 		if (g.start == false) {
+
+			/*glVertexAttribPointer(program.positionAttribute, 3, GL_FLOAT, false, 0, vertices);
+			glEnableVertexAttribArray(program.positionAttribute);
+			glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 0, colors);
+			glEnableVertexAttribArray(colorAttribute);*/
 			
-			DrawText(g.program, g.fontTexture, "Final Fantasy:Press F", 0.1, 0.0);
+			DrawText(g.program, g.fontTexture, "Final Fantasy Part 1:Press F", 0.1, 0.0);
 		}
 
 		
@@ -186,15 +255,6 @@ int main(int argc, char *argv[])
 
 
 	g.program = program;
-
-
-
-
-
-
-
-
-
 	//map2
 	Setup(g, "zz2.txt");
 	while (!g.done) {

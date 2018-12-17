@@ -148,3 +148,5 @@ void drawMap(Game &g);
 void worldToTileCoordinates(Game &g, float worldX, float worldY, int *gridX, int *gridY);
 bool collisionBottom(Game &g);
 bool collisionBot(Game &g,Entity &e);
+float attenuate(float dist, float a, float b);
+//void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);

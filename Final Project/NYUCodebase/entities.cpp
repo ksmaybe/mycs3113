@@ -336,3 +336,6 @@ bool collisionBot(Game &g,Entity &e)
 		e.isStatic = false;
 		return false;
 }
+float attenuate(float dist, float a, float b) {
+	return 1.0 / (1.0 + a * dist + b * dist*dist);
+};
