@@ -115,7 +115,10 @@ void Render(Game &g, float elapsed)
 			float dy = abs(b.y - e.y) - ((b.height + e.height) / 2);
 			if (dy <= 0 & dx <= 0)
 			{
-				if (g.enemies[j].health == 1.0) { Mix_PlayChannel(-1, g.hitSound, 0); }
+				if (g.enemies[j].health == 1.0)
+				{
+					Mix_PlayChannel(-1, g.hitSound, 0);
+				}
 				g.enemies[j].health = 0.0;
 				Entity bullet;
 				g.bullets[i] = bullet;

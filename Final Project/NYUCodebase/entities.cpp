@@ -95,7 +95,6 @@ void Update(Game &g){
 		g.bullets[i].sprite.Draw(g.program);
 	}
 }
-
 void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing)
 {
 	float character_size = 1.0 / 16.0f;
@@ -126,7 +125,51 @@ void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, f
 	float* x2 = &texCoordData[2];
 	glBindTexture(GL_TEXTURE_2D, fontTexture);
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	modelMatrix=translate(modelMatrix, glm::vec3( -1.3, 0.0, 0.0));
+	modelMatrix = translate(modelMatrix, glm::vec3(-1.3, 0.0, 0.0));
+	p.SetModelMatrix(modelMatrix);
+	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
+	glEnableVertexAttribArray(p.positionAttribute);
+	glVertexAttribPointer(p.texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
+	glEnableVertexAttribArray(p.texCoordAttribute);
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+
+	glDrawArrays(GL_TRIANGLES, 0, text.size() * 6);
+
+	glDisableVertexAttribArray(p.positionAttribute);
+	glDisableVertexAttribArray(p.texCoordAttribute);
+
+}
+void DrawText1(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing,float elapsed)
+{
+	float character_size = 1.0 / 16.0f;
+	std::vector<float>vertexData;
+	std::vector<float>texCoordData;
+	for (int i = 0; i < text.size(); i++)
+	{
+		int SpriteIndex = (int)text[i];
+		float texture_x = (float)(SpriteIndex % 16) / 16.0f;
+		float texture_y = (float)(SpriteIndex / 16) / 16.0f;
+		vertexData.insert(vertexData.end(), {
+		((size + spacing) * i) + (-0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (-0.5f * size), -0.5f * size,
+		((size + spacing) * i) + (0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (0.5f * size), -0.5f * size,
+		((size + spacing) * i) + (0.5f * size), 0.5f * size,
+		((size + spacing) * i) + (-0.5f * size), -0.5f * size });
+		texCoordData.insert(texCoordData.end(), {
+		texture_x, texture_y,
+		texture_x, texture_y + character_size,
+		texture_x + character_size, texture_y,
+		texture_x + character_size, texture_y + character_size,
+		texture_x + character_size, texture_y,
+		texture_x, texture_y + character_size });
+
+	}
+	float* x1 = &vertexData[1];
+	float* x2 = &texCoordData[2];
+	glBindTexture(GL_TEXTURE_2D, fontTexture);
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	modelMatrix=translate(modelMatrix, glm::vec3( -1.3, sin(elapsed)*150, 0.0));
 	p.SetModelMatrix(modelMatrix);
 	glVertexAttribPointer(p.positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
 	glEnableVertexAttribArray(p.positionAttribute);
@@ -339,3 +382,32 @@ bool collisionBot(Game &g,Entity &e)
 float attenuate(float dist, float a, float b) {
 	return 1.0 / (1.0 + a * dist + b * dist*dist);
 };
+
+void ParticleEmitter::Render(Game &g)
+{
+	std::vector<float> vertices;
+
+	for (int i = 0; i < particles.size(); i++) {
+		vertices.push_back(particles[i].position.x);
+		vertices.push_back(particles[i].position.y);
+	}
+
+	glVertexAttribPointer(g.program.positionAttribute, 2, GL_FLOAT, false, 0, vertices.data());
+	glEnableVertexAttribArray(g.program.positionAttribute);
+	glDrawArrays(GL_POINTS, 0, particles.size());
+}
+
+float mapValue(float value, float srcMin, float srcMax, float dstMin, float dstMax) {
+	float retVal = dstMin + ((value - srcMin) / (srcMax - srcMin) * (dstMax - dstMin));
+	if (retVal < dstMin) {
+		retVal = dstMin;
+	}
+	if (retVal > dstMax) {
+		retVal = dstMax;
+	}
+	return retVal;
+}
+
+float lerp(float from, float to, float t) {
+	return (1.0 - t)*from + t * to;
+}

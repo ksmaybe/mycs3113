@@ -22,7 +22,8 @@
 #else
 #define RESOURCE_FOLDER "NYUCodebase.app/Contents/Resources/"
 #endif
-
+#define FIXED_TIMESTEP 0.0166666F
+#define MAX_TIMESTEPS 6
 struct FlareMapEntity {
 	std::string type;
 	float x;
@@ -137,16 +138,42 @@ public:
 	std::vector<MixerSound> mixSounds;
 };
 
+class Particle {
+public:
+	glm::vec3 position;
+	glm::vec3 velocity;
+	float lifetime;
+};
+
+class ParticleEmitter {
+public:
+	ParticleEmitter(unsigned int particleCount);
+	ParticleEmitter();
+	~ParticleEmitter();
+
+
+	void Update(float elapsed);
+	void Render(Game &g);
+	glm::vec3 position;
+	glm::vec3 gravity;
+	glm::vec3 velocity;
+	glm::vec3 velocityDeviation;
+	float maxLifetime;
+
+	std::vector<Particle> particles;
+};
 GLuint LoadTexture(const char *filepath);
 void Setup(Game &g,std::string stage_name);
 void Render(Game &g, float elapsed);
 void Runner(Game &g);
 void Update(Game &g);
 void DrawText(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing);
+void DrawText1(ShaderProgram &p, int fontTexture, std::string text, float size, float spacing,float elapsed);
 void shootBullet(Game &g);
 void drawMap(Game &g);
 void worldToTileCoordinates(Game &g, float worldX, float worldY, int *gridX, int *gridY);
 bool collisionBottom(Game &g);
 bool collisionBot(Game &g,Entity &e);
 float attenuate(float dist, float a, float b);
-//void glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+float mapValue(float value, float srcMin, float srcMax, float dstMin, float dstMax);
+float lerp(float from, float to, float t);

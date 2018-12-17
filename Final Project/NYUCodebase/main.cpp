@@ -28,8 +28,10 @@ int main(int argc, char *argv[])
 	glm::mat4 projectionMatrix1 = glm::mat4(1.0f);
 	glm::mat4 modelMatrix_leftpaddle = glm::mat4(1.0f);
 	glm::mat4 viewMatrix1 = glm::mat4(1.0f);
+	viewMatrix1 = glm::translate(viewMatrix1, glm::vec3(1.0f, -1.0f, 0.0f));
+	float accumulator = 0.0f;
 
-
+	float lastFrameTicks=0.0f;
 
 	projectionMatrix1 = glm::ortho(-1.777f, 1.777f, -1.0f, 1.0f, -1.0f, 1.0f);
 
@@ -41,36 +43,51 @@ int main(int argc, char *argv[])
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	GLuint fontTexture = LoadTexture("font1.png");
-
+	float screenShakeValue=1.0f;
+	float screenShakeIntensity = 0.1f;
+	float screenShakeSpeed = 0.10;
+	float xxx = 0.0f;
 	while (!start) {
 			//time
+		float ticks = (float)SDL_GetTicks() / 10000.0f;
+		float elapsed = ticks - lastFrameTicks;
+		lastFrameTicks = ticks;
+		screenShakeValue += elapsed;
+		// get elapsed time
+		elapsed += accumulator;
+		if (elapsed < FIXED_TIMESTEP) {
+			accumulator = elapsed;
+			continue;
+		}
+		while (elapsed >= FIXED_TIMESTEP) {
+			elapsed -= FIXED_TIMESTEP;
+		}
+		accumulator = elapsed;
+		const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
 
-			const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-
-			while (SDL_PollEvent(&event)) {
-				if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-					break;
-				}
-				else if (event.type == SDL_KEYDOWN)
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
+				break;
+			}
+			else if (event.type == SDL_KEYDOWN)
+			{
+				if (event.key.keysym.scancode == SDL_SCANCODE_F)
 				{
-					if (event.key.keysym.scancode == SDL_SCANCODE_F)
-					{
-						start = true;
-						//change game mode, start game level
-					}
-
-			
+					start = true;
+					//change game mode, start game level
 				}
-			}
-			if (start == false) {
 
-				/*glVertexAttribPointer(program.positionAttribute, 3, GL_FLOAT, false, 0, vertices);
-				glEnableVertexAttribArray(program.positionAttribute);
-				glVertexAttribPointer(colorAttribute, 4, GL_FLOAT, false, 0, colors);
-				glEnableVertexAttribArray(colorAttribute);*/
-
-				DrawText(program, fontTexture, "Final Fantasy :Press F", 0.1, 0.0);
+		
 			}
+		}
+		viewMatrix1 = translate(viewMatrix1, glm::vec3(0.0f, sin(screenShakeValue), 0.0f));
+	//viewMatrix1 = glm::translate(viewMatrix1,glm::vec3(0.0f, sin(elapsed), 0.0f));
+		program.SetViewMatrix(viewMatrix1);
+	
+
+		if (start == false) {
+			DrawText1(program, fontTexture, "Final Fantasy :Press F", 0.1, 0.0,elapsed);
+		}
 		SDL_GL_SwapWindow(displayWindow);
 	}
 	SDL_Quit();
