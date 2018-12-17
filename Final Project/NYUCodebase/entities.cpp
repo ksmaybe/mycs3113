@@ -149,7 +149,7 @@ void shootBullet(Game &g)
 	newBullet.sprite = SheetSprite(spriteSheetTexture, 856.0f / gg, 57.0f / gg, 9.0f / gg, 37.0f / gg, 0.1);
 	newBullet.sprite.x = g.ship.sprite.x;
 	newBullet.sprite.y = g.ship.sprite.y;
-	newBullet.velocity = 4.0f;
+	newBullet.velocity = 14.0f;
 	newBullet.timeAlive = 0.0f;
 	if(g.ship.faceLeft==true){newBullet.faceLeft = true;}
 	else { newBullet.faceLeft = false; }
@@ -279,7 +279,7 @@ void FlareMap::Load(const std::string fileName) {
 		else if (line == "[layer]") {
 			ReadLayerData(infile);
 		}
-		else if (line == "[Object Layer]") {
+		else if (line == "[Object Layer 1]") {
 			ReadEntityData(infile);
 		}
 	}

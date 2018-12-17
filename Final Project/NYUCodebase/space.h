@@ -83,6 +83,7 @@ public:
 	float health=0.0;
 	float timeAlive=0.0f;
 	bool isStatic=false;
+	std::string type;
 };
 
 class Game
@@ -110,6 +111,8 @@ public:
 	Mix_Chunk *shootSound;
 	Mix_Chunk *hitSound;
 	bool enemyKilled = false;
+	bool quit=false;
+	int next = 1;
 };
 
 class MixerSound
@@ -134,7 +137,7 @@ public:
 };
 
 GLuint LoadTexture(const char *filepath);
-void Setup(Game &g);
+void Setup(Game &g,std::string stage_name);
 void Render(Game &g, float elapsed);
 void Runner(Game &g);
 void Update(Game &g);
