@@ -55,22 +55,24 @@ void Object::Draw(ShaderProgram& p)
 std::vector<std::pair<float, float>> get_point(Object &o)
 {
 	//bot l
-	glm::vec4 x1 = glm::vec4(-hw / 2, -hw / 2, 0.0f, 1.0f);
+	float h = o.height;
+	float w = o.width;
+	glm::vec4 x1 = glm::vec4(-w / 2, -h / 2, 0.0f, 1.0f);
 	glm::vec4 bl = o.model*x1;
 	std::pair<float, float> obl = { bl.x,bl.y };
 
 	//bot r
-	glm::vec4 x2 = glm::vec4(hw / 2, -hw / 2, 0.0f, 1.0f);
+	glm::vec4 x2 = glm::vec4(w / 2, -h / 2, 0.0f, 1.0f);
 	glm::vec4 br = o.model*x2;
 	std::pair<float, float> obr = { br.x,br.y };
 	
 	//top r
-	glm::vec4 x3 = glm::vec4(hw / 2, hw / 2, 0.0f, 1.0f);
+	glm::vec4 x3 = glm::vec4(w / 2, h / 2, 0.0f, 1.0f);
 	glm::vec4 tr = o.model*x3;
 	std::pair<float, float> otr = { tr.x,tr.y };
 	
 	//top l
-	glm::vec4 x4 = glm::vec4(-hw / 2, hw / 2, 0.0f, 1.0f);
+	glm::vec4 x4 = glm::vec4(-w / 2, h / 2, 0.0f, 1.0f);
 	glm::vec4 tl = o.model*x4;
 	std::pair<float, float> otl = { tl.x,tl.y };
 
@@ -79,6 +81,14 @@ std::vector<std::pair<float, float>> get_point(Object &o)
 	return pp;
 }
 
+void move_points(Object &o1,Object &o2,std::pair<float,float> &pen)
+{
+	o1.x += pen.first*0.3f;
+	o1.y += pen.second*0.3f;
+
+	o2.x -= pen.first*0.3f;
+	o2.y -= pen.second*0.3f;
+}
 
 SDL_Window* displayWindow;
 GLuint LoadTexture(const char *filepath)
@@ -182,7 +192,8 @@ int main(int argc, char *argv[])
 		o2. angle -= elapsed;
 		o1.x -= elapsed;
 		o2.x += elapsed;
-
+		o1.width += elapsed*0.3;
+		o1.height += elapsed*0.3;
 		oo.Draw(program);
 		o1.Draw(program1);
 		o2.Draw(program2);
@@ -198,11 +209,7 @@ int main(int argc, char *argv[])
 
 		if(collision)
 		{
-			oo.x += pen.first*0.3f;
-			oo.y += pen.second*0.3f;
-
-			o1.x -= pen.first*0.3f;
-			o1.y -= pen.second*0.3f;
+			move_points(oo, o1, pen);
 		}
 
 		std::pair<float, float> pen1;
@@ -211,22 +218,15 @@ int main(int argc, char *argv[])
 
 		if(collision1)
 		{
-			o1.x += pen1.first*0.3f;
-			o1.y += pen1.second*0.3f;
-
-			o2.x -= pen1.first*0.3f;
-			o2.y -= pen1.second*0.3f;
+			move_points(o1, o2, pen1);
 		}
 
 		std::pair<float, float> pen2;
 		bool collision2 = CheckSATCollision(p_oo, p_o2, pen2);
+
 		if (collision2)
 		{
-			oo.x += pen2.first*0.3f;
-			oo.y += pen2.second*0.3f;
-
-			o2.x -= pen2.first*0.3f;
-			o2.y -= pen2.second*0.3f;
+			move_points(oo, o2, pen2);
 		}
 
 		SDL_GL_SwapWindow(displayWindow);
