@@ -124,9 +124,7 @@ int main(int argc, char *argv[])
 	program.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	program1.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
 	program2.Load(RESOURCE_FOLDER"vertex.glsl", RESOURCE_FOLDER"fragment.glsl");
-	/*GLuint emojiTexture = LoadTexture(RESOURCE_FOLDER"smile.gif");
-	GLuint hahaTexture = LoadTexture(RESOURCE_FOLDER"mario.png");
-	GLuint pikaTexture = LoadTexture(RESOURCE_FOLDER"pikachu-transparent-3.png");*/
+
 	glm::mat4 projectionMatrix = glm::mat4(1.0f);
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
 	glm::mat4 viewMatrix = glm::mat4(1.0f);
@@ -185,11 +183,6 @@ int main(int argc, char *argv[])
 		o1.x -= elapsed;
 		o2.x += elapsed;
 
-
-
-		//modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
-		//modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(1.1f, 0.4f, 0.0f));
-		//modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(-1.1f, -0.4f, 0.0f));
 		oo.Draw(program);
 		o1.Draw(program1);
 		o2.Draw(program2);
@@ -236,55 +229,6 @@ int main(int argc, char *argv[])
 			o2.y -= pen2.second*0.3f;
 		}
 
-		/*
-		//0
-		glUseProgram(program.programID);
-
-		modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 0.0f, 0.0f));
-		program1.SetColor(0.4f, 0.9f, 0.4f, 1.0f);
-		program1.SetModelMatrix(modelMatrix);
-
-		float vertices[] = { 0.5f, -0.5f, 0.0f, 0.5f, -0.5f, -0.5f };
-		glVertexAttribPointer(program.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-		glEnableVertexAttribArray(program.positionAttribute);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glDisableVertexAttribArray(program.positionAttribute);
-		glDisableVertexAttribArray(program.texCoordAttribute);
-
-		//1
-		glUseProgram(program1.programID);
-
-		modelMatrix1 = glm::translate(modelMatrix1, glm::vec3(0.0f, 0.0f, 0.0f));
-		program1.SetColor(0.3f, 0.3f, 0.3f, 1.0f);
-		program1.SetModelMatrix(modelMatrix1);
-
-		float vertices1[] = { 0.5f, -0.5f, 0.0f, 0.5f, -0.5f, -0.5f };
-		glVertexAttribPointer(program1.positionAttribute, 2, GL_FLOAT, false, 0, vertices1);
-		glEnableVertexAttribArray(program1.positionAttribute);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glDisableVertexAttribArray(program1.positionAttribute);
-		glDisableVertexAttribArray(program1.texCoordAttribute);
-
-		//3
-		glUseProgram(program2.programID);
-
-		modelMatrix2 = glm::translate(modelMatrix2, glm::vec3(0.0f, 0.0f, 0.0f));
-		program1.SetColor(0.6f, 0.6f, 0.6f, 1.0f);
-		program1.SetModelMatrix(modelMatrix2);
-
-		float vertices2[] = { 0.5f, -0.5f, 0.0f, 0.5f, -0.5f, -0.5f };
-		glVertexAttribPointer(program2.positionAttribute, 2, GL_FLOAT, false, 0, vertices2);
-		glEnableVertexAttribArray(program2.positionAttribute);
-
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-
-		glDisableVertexAttribArray(program2.positionAttribute);
-		glDisableVertexAttribArray(program2.texCoordAttribute);
-		*/
 		SDL_GL_SwapWindow(displayWindow);
 
 
